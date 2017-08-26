@@ -2,7 +2,7 @@
 #include "clHierarchicalStructure.h"
 #include "Log.h"
 #include "clTypeUtil.h"
-#include "clDebugger.h"
+#include "clPrinter.h"
 #include "clFolderAndFile.h"
 
 using namespace cl;
