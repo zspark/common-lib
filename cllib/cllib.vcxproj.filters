@@ -30,10 +30,10 @@
     <ClInclude Include="include\clTypeUtil.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\dirent.h">
+    <ClInclude Include="include\core\dirent.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\debugger.h">
+    <ClInclude Include="include\clDebugger.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -49,7 +49,7 @@
     <ClCompile Include="src\Log.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\debugger.cpp">
+    <ClCompile Include="src\clDebugger.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

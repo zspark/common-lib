@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <iostream>
-#include "debugger.h"
+#include "clDebugger.h"
 
 namespace cl{
 

@@ -2,7 +2,7 @@
 #include "clHierarchicalStructure.h"
 #include "Log.h"
 #include "clTypeUtil.h"
-#include "debugger.h"
+#include "clDebugger.h"
 
 using namespace cl;
 void TestHS(){
