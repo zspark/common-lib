@@ -4,6 +4,7 @@
 #include "clTypeUtil.h"
 #include "clPrinter.h"
 #include "clFolderAndFile.h"
+#include "clUtil.h"
 
 using namespace cl;
 void TestHS(){
@@ -99,13 +100,21 @@ void TestClType(){
 void TestFolderAndFile(){
   cl::FolderAndFile ff;
   clI n;
-  cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FILE,&n);
+  cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2",FolderAndFile::V_ALL,&n);
+  //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FOLDER,&n);
+  //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FILE,&n);
   
   while(info){
-    cl::Info(info->nameN+"."+info->extension);
+#if(0)
+    if(info->isFolder)cl::Text(info->nameN);
+    else cl::Text(info->nameN+"."+info->extension);
+#else
+    if(info->isFolder)cl::Text(info->fullURL,ConsoleForeground::RED);
+    else cl::Text(info->fullURL,ConsoleForeground::GREEN);
+#endif
     info=info->next;
   }
-  cout<<n<<endl;
+  cl::Text("TOTAL::"+cl::NumberToString(n));
 
   ff.Release();
 }

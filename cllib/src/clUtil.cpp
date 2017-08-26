@@ -8,4 +8,7 @@ namespace cl {
 	}
 	*/
 
+clB IsEndedWithSlash(std::string s){
+  return s.find_last_of('/')==s.length()-1;
+}
 }

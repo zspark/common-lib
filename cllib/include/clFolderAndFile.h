@@ -7,7 +7,7 @@ namespace cl{
 
 using namespace std;
 
-class FolderAndFile{
+class FolderAndFile final{
 public:
   enum FFFlag{
     V_FOLDER=0x0001,
@@ -25,6 +25,10 @@ public:
   FolderAndFile();
   ~FolderAndFile();
 
+  /**
+  * rootURL必须以'/'结尾，否则直接返回；
+  * cout表示有多少个文件，可不传值；
+  */
   const FFInfo* Traverse(clCcs rootURL,FFFlag flag,clI* count=nullptr);
   void Release();
 

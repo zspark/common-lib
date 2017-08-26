@@ -1,7 +1,7 @@
 #pragma once
 
-#include "clTypes.h"
 #include <sstream>
+#include "clTypes.h"
 
 namespace cl{
 //void copyAtoB(clUniformVariable& a,clUniformVariable& b);
@@ -12,5 +12,7 @@ std::string NumberToString(T Number){
   ss<<Number;
   return ss.str();
 }
+
+clB IsEndedWithSlash(std::string);
 
 }

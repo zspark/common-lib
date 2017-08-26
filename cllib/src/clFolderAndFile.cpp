@@ -1,5 +1,8 @@
 #include "core\dirent.h"
+#include "cllib.h"
 #include "clFolderAndFile.h"
+#include "clUtil.h"
+#include "clPrinter.h"
 
 namespace cl{
 
@@ -11,9 +14,18 @@ inline FolderAndFile::FFInfo* CreateNewFFInfo(FolderAndFile::FFInfo* old,clI& n)
 }
 
 FolderAndFile::FolderAndFile(){}
-FolderAndFile::~FolderAndFile(){}
+FolderAndFile::~FolderAndFile(){
+  Release();
+}
 
 cFFInfo* FolderAndFile::Traverse(clCcs rootURL,FolderAndFile::FFFlag flag,clI* count){
+    string rtURL{rootURL};
+  if(!IsEndedWithSlash(rootURL)){
+#ifdef __CLLIB_INTERNAL_DEBUG__
+    Warning("path \""+rtURL+"\" is not ended with '/'");
+#endif
+    rtURL+='/';
+  }
   DIR *pDIR;
   struct dirent *entry;
   if(pDIR=::opendir(rootURL)){
@@ -25,24 +37,22 @@ cFFInfo* FolderAndFile::Traverse(clCcs rootURL,FolderAndFile::FFFlag flag,clI* c
     while(entry=::readdir(pDIR)){
       switch(entry->d_type){
       case DT_REG:
-      {
         if(fileFlag){
           current=CreateNewFFInfo(current,n);
           string nameE=string(entry->d_name);
           current->isFolder=false;
-          current->fullURL=(string)rootURL+"/"+nameE;
+          current->fullURL=rtURL+nameE;
           clI index=nameE.find_last_of('.');
           current->nameN=index>0?nameE.substr(0,index):nameE;
           current->extension=index>0?nameE.substr(index+1):"";
         }
-      }
-      break;
+        break;
       case DT_DIR:
         if(folderFlag){
           current=CreateNewFFInfo(current,n);
           string nameE=string(entry->d_name);
           current->isFolder=true;
-          current->fullURL=(string)rootURL+"/"+nameE;
+          current->fullURL=rtURL+nameE;
           current->nameN=nameE;
           current->extension="";
         }
