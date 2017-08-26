@@ -6,8 +6,12 @@
 *.suo
 *.sdf
 *.user
-*.filter
+*.filters
+*.vcxproj.filters
 *.vcxproj
+*.lib
+*.pdb
+*.log
 x64/
 external/
 Debug/

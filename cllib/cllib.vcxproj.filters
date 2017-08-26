@@ -33,6 +33,9 @@
     <ClInclude Include="include\dirent.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\debugger.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\clHierarchicalStructure.inl">
@@ -44,6 +47,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\Log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\debugger.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
