@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "clTypeUtil.h"
 #include "clDebugger.h"
+#include "clFolderAndFile.h"
 
 using namespace cl;
 void TestHS(){
@@ -95,6 +96,19 @@ void TestClType(){
 }
 
 
+void TestFolderAndFile(){
+  cl::FolderAndFile ff;
+  clI n;
+  cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FILE,&n);
+  
+  while(info){
+    cl::Info(info->nameN+"."+info->extension);
+    info=info->next;
+  }
+  cout<<n<<endl;
+
+  ff.Release();
+}
 
 
 
@@ -110,7 +124,8 @@ int main(){
   //TestClass();
   //TestLog();
   //TestClType();
-  TestDebugger();
+  //TestDebugger();
+  TestFolderAndFile();
   std::cout<<"Hello World! testbed end."<<std::endl;
   system("PAUSE");
   return 0;
