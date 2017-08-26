@@ -1,0 +1,36 @@
+{
+  "menubar": [
+    {
+      "caption": "File",
+      "components": [
+        {
+          "type": "menuitem",
+          "caption": "Open.3",
+          "hotkey": "CTRL+K",
+          "selected": "false"
+        },
+        {
+          "type": "menuitem",
+          "caption": "Open..",
+          "hotkey": "CTRL+O",
+          "selected": "false"
+        }
+      ]
+    },
+    {
+      "caption": "Help",
+      "components": [
+        {
+          "type": "menuitem",
+          "caption": "Help",
+          "hotkey": "CTRL+H",
+          "selected": "false"
+        },
+        {
+          "type": "button",
+          "caption": "I am a button!"
+        }
+      ]
+    }
+  ]
+}

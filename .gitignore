@@ -1,0 +1,14 @@
+﻿.vs/
+*.opensdf
+*.db
+*.opendb
+*.sln
+*.suo
+*.sdf
+*.user
+*.filter
+*.vcxproj
+x64/
+external/
+Debug/
+Release/
