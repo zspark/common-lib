@@ -31,21 +31,12 @@ public:
     string extension;
     const FFInfo* next=nullptr;
   };
-  FolderAndFile();
-  ~FolderAndFile();
-
-  /**
-  * rootURL必须以'/'结尾，否则直接返回；
-  * cout表示有多少个文件，可不传值；
-  */
-  const FFInfo* Traverse(clCcs rootURL,clUi flag,clI* count=nullptr);
-  void Release();
 
   /**
   * 移除文件，也可以移除空目录；
   * true if success;
   */
-  bool Remove(const FFInfo*)const;
+  static bool Remove(const FFInfo*);
 
   /**
   * copy file
@@ -53,12 +44,20 @@ public:
   * if desFolderPath is not exist, then returns false;
   * returns true if success
   */
-  bool CopyFileTo(const FFInfo* info,string desFolderPath)const;
-  bool CreateFolder(string folderPath)const;
-  inline bool IsFolderExist(string folderPath)const;
-  inline bool IsFileExist(string fileURL)const;
+  static bool CopyFileTo(const FFInfo* info,string desFolderPath);
+  static bool CreateFolder(string folderPath);
+  static bool IsFolderExist(string folderPath);
+  static bool IsFileExist(string fileURL);
+  static string FixPathOrURL(string str);
 
-  string FixPathOrURL(string str)const;
+public:
+  FolderAndFile();
+  ~FolderAndFile();
+
+  /**
+  * cout表示有多少个文件，可不传值；
+  */
+  const FFInfo* Traverse(string rootPath,clUi flag,clI* count=nullptr);
 
 private:
   const FFInfo* m_root;
