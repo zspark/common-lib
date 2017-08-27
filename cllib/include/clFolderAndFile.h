@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "clTypes.h"
+#include "cllib.h"
 
 namespace cl{
 
@@ -26,8 +26,8 @@ public:
     clB isFolder;
     string nameN;
     string nameE;
-    string fullURL;
-    string fullPath;
+    string URL;
+    string parentPath;
     string extension;
     const FFInfo* next=nullptr;
   };
@@ -49,12 +49,16 @@ public:
 
   /**
   * copy file
-  * true if success
+  * if info refers to a folder, then returns false;
+  * if desFolderPath is not exist, then returns false;
+  * returns true if success
   */
-  bool Copy(const FFInfo* info,string desFolderURL)const;
+  bool CopyFileTo(const FFInfo* info,string desFolderPath)const;
   bool CreateFolder(string folderPath)const;
   inline bool IsFolderExist(string folderPath)const;
   inline bool IsFileExist(string fileURL)const;
+
+  string FixPathOrURL(string str)const;
 
 private:
   const FFInfo* m_root;

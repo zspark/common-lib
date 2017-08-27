@@ -7,6 +7,12 @@ namespace cl{
 using namespace std;
 HANDLE static h=GetStdHandle(STD_OUTPUT_HANDLE);
 
+void Unimportant(const string& s){
+  SetConsoleTextAttribute(h,ConsoleForeground::GRAY);
+  cout<<"[Unimportant] "+s<<endl;
+  //SetConsoleTextAttribute(h,ConsoleForeground::GRAY);
+}
+
 void Info(const string& s){
   SetConsoleTextAttribute(h,ConsoleForeground::GREEN);
   cout<<"[Info] "+s<<endl;

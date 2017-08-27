@@ -26,6 +26,7 @@ enum{
 }
 
 namespace cl{
+void Unimportant(const std::string& s);
 void Info(const std::string& s);
 void Error(const std::string& s);
 void Warning(const std::string& s);

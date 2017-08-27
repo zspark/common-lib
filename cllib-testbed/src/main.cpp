@@ -2,6 +2,7 @@
 #include "clHierarchicalStructure.h"
 #include "Log.h"
 #include "clTypeUtil.h"
+#include "clRegexpUtil.h"
 #include "clPrinter.h"
 #include "clFolderAndFile.h"
 #include "clUtil.h"
@@ -110,12 +111,14 @@ void TestClType(){
 
 void TestFolderAndFile(){
   cl::FolderAndFile ff;
-#if(1)
-    if(!ff.CreateFolder("z:/temp2/sss/aaa/")){
+#if(0)
+    if(!ff.CreateFolder("z:/tesf/sge/sfsf")){//fail;
+    //if(!ff.CreateFolder("temp3/aa/")){
+    //if(!ff.CreateFolder("z:/temp2/sss/aaa/")){
       cl::Error("Creating folder failed, mybe it's already exist!");
     }
-#endif
     return;
+#endif
   clI n;
   //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2",FolderAndFile::V_ALL,&n);
   //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FOLDER,&n);
@@ -128,17 +131,17 @@ void TestFolderAndFile(){
     if(info->isFolder)cl::Text(info->nameN);
     else cl::Text(info->nameN+"."+info->extension);
 #else
-    if(info->isFolder)cl::Text(info->fullURL,ConsoleForeground::RED);
-    else cl::Text(info->fullURL,ConsoleForeground::GREEN);
+    if(info->isFolder)cl::Text(info->URL,ConsoleForeground::RED);
+    else cl::Text(info->URL,ConsoleForeground::GREEN);
 #endif
 #if(0)
     if(!ff.Remove(info)){
-      cl::Error("File: "+info->fullURL+" did not removed!");
+      cl::Error("File: "+info->URL+" did not removed!");
     }
 #endif
-#if(0)
-    if(!ff.Copy(info,"z:/temp2/")){
-      cl::Error("File: "+info->fullURL+" coping failed!");
+#if(1)
+    if(!ff.CopyFileTo(info,"z:/temp2/aaa/bbb")){
+      cl::Error("File: "+info->URL+" coping failed!");
     }
 #endif
 
@@ -152,6 +155,27 @@ void TestFolderAndFile(){
 }
 
 
+void TestRegexp(){
+  //string str="z:\\sfsfsf\\gggg\\efefef\\sxxx.zip";
+  string str=R"(z:\sfsfsf\gggg\efefef\sxxx.zip)";
+#if(0)
+  cl::Info("string length:"+NumberToString(str.length()));
+  string result;
+  result=ReplaceBackSlashToSlash(str);
+  cl::Info("\""+str+"\" repalced to"+" \""+result+"\"");
+#endif
+
+#if(1)
+  //const string e="z";
+  const string e="^[a-zA-Z]:";
+  if(clRegexp::Contain(str,e)){
+    Info(str+" is begin with "+e);
+  } else{
+    Info(str+" is not begin with "+e);
+  }
+
+#endif
+}
 
 
 
@@ -164,9 +188,10 @@ int main(){
   //TestHS();
   //TestClass();
   //TestLog();
-  TestClType();
+  //TestClType();
   //TestDebugger();
-  //TestFolderAndFile();
+  TestFolderAndFile();
+  //TestRegexp();
   std::cout<<"Hello World! testbed end."<<std::endl;
   system("PAUSE");
   return 0;

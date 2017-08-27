@@ -42,6 +42,9 @@
     <ClInclude Include="include\cllib.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\clRegexpUtil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\clHierarchicalStructure.inl">
@@ -62,6 +65,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\clTypeUtil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clRegexpUtil.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
