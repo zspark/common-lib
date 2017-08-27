@@ -75,6 +75,7 @@ void TestDebugger(){
 
 
 void TestClType(){
+#if(0)
   clI2 int2_1,int2_2;
   int2_1.Set(30);
   clTypeUtil::Set<clI2,clI>(int2_1,2,3);
@@ -87,22 +88,40 @@ void TestClType(){
   clTypeUtil::CopyAtoB(f3,f1);
   std::cout<<f3.x<<" "<<f3.y<<" "<<f3.z<<std::endl;
   std::cout<<f1.x<<" "<<f1.y<<" "<<f1.z<<std::endl;
-
+#endif
   /*
   clI2 int2;
   clF2 float2;
   float2.Set(1.0f,2.4f);
   int2.Copy(float2);
 */
+
+#if(1)
+  char str[]="- This, a sample string.";
+  vector<string> vec;
+  printf("Splitting string \"%s\" into tokens:\n",str);
+  clTypeUtil::SplitString(str,&vec," .,-");
+  for each(string s in vec){
+    cl::Text(s);
+  }
+#endif
 }
 
 
 void TestFolderAndFile(){
   cl::FolderAndFile ff;
+#if(1)
+    if(!ff.CreateFolder("z:/temp2/sss/aaa/")){
+      cl::Error("Creating folder failed, mybe it's already exist!");
+    }
+#endif
+    return;
   clI n;
-  cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2",FolderAndFile::V_ALL,&n);
+  //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2",FolderAndFile::V_ALL,&n);
   //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FOLDER,&n);
   //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FILE,&n);
+  //cl::cFFInfo* info=ff.Traverse("z:/temp/",FolderAndFile::V_ALL,&n);
+  cl::cFFInfo* info=ff.Traverse("z:/temp/",FolderAndFile::V_ALL|FolderAndFile::V_NO_DOT_FOLDER,&n);
   
   while(info){
 #if(0)
@@ -112,6 +131,19 @@ void TestFolderAndFile(){
     if(info->isFolder)cl::Text(info->fullURL,ConsoleForeground::RED);
     else cl::Text(info->fullURL,ConsoleForeground::GREEN);
 #endif
+#if(0)
+    if(!ff.Remove(info)){
+      cl::Error("File: "+info->fullURL+" did not removed!");
+    }
+#endif
+#if(0)
+    if(!ff.Copy(info,"z:/temp2/")){
+      cl::Error("File: "+info->fullURL+" coping failed!");
+    }
+#endif
+
+
+
     info=info->next;
   }
   cl::Text("TOTAL::"+cl::NumberToString(n));
@@ -132,9 +164,9 @@ int main(){
   //TestHS();
   //TestClass();
   //TestLog();
-  //TestClType();
+  TestClType();
   //TestDebugger();
-  TestFolderAndFile();
+  //TestFolderAndFile();
   std::cout<<"Hello World! testbed end."<<std::endl;
   system("PAUSE");
   return 0;
