@@ -8,6 +8,9 @@ namespace cl{
 namespace clTypeUtil{
 
 void SplitString(std::string s,std::vector<std::string>* vec,clCcs delimiters);
+void CombineStrings(const std::vector<std::string>& vec,std::string* result,clCcs delimiters);
+clUi GetDecimalLength(clUi);
+std::string StringTrim(std::string s);
 
 template<typename T,typename T2>
 T Make(T2 a,T2 b){

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "clHierarchicalStructure.h"
+#include "cllib.h"
 #include "Log.h"
 #include "clTypeUtil.h"
 #include "clRegexpUtil.h"
@@ -8,6 +9,7 @@
 #include "clUtil.h"
 
 using namespace cl;
+
 void TestHS(){
   typedef clHierarchicalStructureNode_T<int> NodeInt;
   typedef clHierarchicalStructure_T<NodeInt> SHInt;
@@ -97,7 +99,7 @@ void TestClType(){
   int2.Copy(float2);
 */
 
-#if(1)
+#if 0
   char str[]="- This, a sample string.";
   vector<string> vec;
   printf("Splitting string \"%s\" into tokens:\n",str);
@@ -105,6 +107,20 @@ void TestClType(){
   for each(string s in vec){
     cl::Text(s);
   }
+#endif
+
+#if 0
+  vector<string> a{"I","am","a","litte","dog","."};
+  string s;
+  clTypeUtil::CombineStrings(a,&s," ");
+  Info(s);
+#endif
+
+#if 1
+  Info("||"+clTypeUtil::StringTrim("   sfsfggg   ")+"||");
+  Info("||"+clTypeUtil::StringTrim("   sfsfggg\n he   ")+"||");
+  Info("||"+clTypeUtil::StringTrim("   ")+"||");
+  Info("||   sfsfggg\n he   ||");
 #endif
 }
 
@@ -140,9 +156,10 @@ void TestFolderAndFile(){
       if(!FolderAndFile::IsFolderExist(targetPath+info->nameN))
         FolderAndFile::CreateFolder(targetPath+info->nameN);
     } else{
-      if(FolderAndFile::IsFileExist(targetPath+info->nameE))continue;
-      if(!FolderAndFile::CopyFileTo(info,targetPath)){
-        cl::Error("File: "+info->URL+" coping failed!");
+      if(!FolderAndFile::IsFileExist(targetPath+info->nameE)){
+        if(!FolderAndFile::CopyFileTo(info,targetPath)){
+          cl::Error("File: "+info->URL+" coping failed!");
+        }
       }
     }
 #endif
@@ -179,7 +196,7 @@ void TestRegexp(){
   cl::Info("\""+str+"\" repalced to"+" \""+result+"\"");
 #endif
 
-#if(1)
+#if(0)
   //const string e="z";
   const string e="^[a-zA-Z]:";
   if(clRegexp::Contain(str,e)){
@@ -187,7 +204,51 @@ void TestRegexp(){
   } else{
     Info(str+" is not begin with "+e);
   }
+#endif
 
+#if 1
+  std::string s("this subject has a submarine as a subsequence");
+  std::vector<string> out;
+  clRegexp::ExecuteRegex(s,"\\b(sub)([^ ]*)",out);
+
+  for(clI i=0;i<out.size();i++){
+    Info("index:"+NumberToString(i)+" value:"+out[i]);
+  }
+
+#endif
+#if 0
+  //string s="012525252000200";
+  string s="10,125,252,520,002,000";
+  if(F_IS_STRING_ALL_DECIMAL(s)){
+    Info("It's all decimal numbers!");
+  }
+#endif
+#if 0
+  //string s="sfsf.ggg_x.gg_x";
+  //string s="sfsf.ssex.ggg_x";
+  //string s="sfsf.ssex.GGg_x";
+  //string s=".GGg_x";
+  string s=".GGg_xw";
+  if(clRegexp::IsExtensionRight(s,"ggg_x")){
+    Info("It's right!");
+  }
+#endif
+#if 0
+  //string fileName="sfsf.jpEg";
+  //string fileName="sfsf.jpg";
+  string fileName="sfsf/gef\\sfsf_sfg225/sg3__ssf22.jPeG";
+  if(F_IS_JPG_FILE(fileName)){
+    Info("It's jpg/jpeg file");
+  }
+#endif
+#if 0
+  string fileName="sfsf.PnG";
+  //string fileName="sfsf.PNG";
+  //string fileName="sfsf.png";
+  //string fileName="sfsf/gef\\sfsf_sfg225/sg3__ssf22.png";
+  if(F_IS_PNG_FILE(fileName)){
+    Info("It's png file");
+  }
 #endif
 }
 
@@ -202,9 +263,9 @@ int main(){
   //TestHS();
   //TestClass();
   //TestLog();
-  //TestClType();
+  TestClType();
   //TestDebugger();
-  TestFolderAndFile();
+  //TestFolderAndFile();
   //TestRegexp();
   std::cout<<"Hello World! testbed end."<<std::endl;
   system("PAUSE");

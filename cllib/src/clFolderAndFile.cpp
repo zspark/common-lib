@@ -128,7 +128,7 @@ bool FolderAndFile::IsFileExist(string fileURL){
 }
 
 string FolderAndFile::FixPathOrURL(string str){
-  string result=ReplaceBackSlashToSlash(str);
+  string result=F_REPLACE_BACKSLASH_TO_SLASH(str);
   if(!IsEndedWithSlash(str)){
 #ifdef __CLLIB_INTERNAL_DEBUG__
     Warning("path \""+str+"\" is not ended with '/'");
