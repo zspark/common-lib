@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace cl{
 typedef int clI;
 typedef unsigned int clUi;
@@ -8,6 +10,7 @@ typedef double clD;
 typedef bool clB;
 typedef const char* clCcs;
 typedef char* clCs;
+typedef std::string clString;
 
 template<typename T>
 struct type_2T{

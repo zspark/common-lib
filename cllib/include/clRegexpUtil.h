@@ -13,8 +13,8 @@ clB Contain(string str,T_REGEXP_STRING format,clB caseSensitive=true);
 clB Match(string str,T_REGEXP_STRING format,clB caseSensitive=true);
 string Replace(string str,string from,string to);
 void ExecuteRegex(string str,T_REGEXP_STRING format,vector<string>& out);
-clB IsEndedWith(string str,string sufix);
-clB IsStartedWith(string str,string prefix);
+clB IsEndedWith(string str,string sufix,clB caseSensitive=true);
+clB IsStartedWith(string str,string prefix,clB caseSensitive=true);
 }
 }
 

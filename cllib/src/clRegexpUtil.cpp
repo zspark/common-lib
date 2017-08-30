@@ -44,16 +44,20 @@ void ExecuteRegex(string str,T_REGEXP_STRING format,vector<string>& out){
   }
 }
 
-clB IsEndedWith(string str,string sufix){
+clB IsEndedWith(string str,string sufix,clB caseSensitive){
   T_REGEXP_STRING tmp;
   tmp=sufix+"$";
-  regex e(tmp,regex::icase);
+  regex e;
+  if(caseSensitive)e.assign(tmp);
+  else e.assign(tmp,regex::icase);
   return regex_search(str,e);
 }
-clB IsStartedWith(string str,string prefix){
+clB IsStartedWith(string str,string prefix,clB caseSensitive){
   T_REGEXP_STRING tmp;
   tmp="^"+prefix;
-  regex e(tmp,regex::icase);
+  regex e;
+  if(caseSensitive)e.assign(tmp);
+  else e.assign(tmp,regex::icase);
   return regex_search(str,e);
 }
 }
