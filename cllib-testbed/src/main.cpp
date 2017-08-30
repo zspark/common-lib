@@ -68,11 +68,22 @@ void TestLog(){
 
 
 
-void TestDebugger(){
+void TestPrinter(){
+#if 0
   cl::Info("This is debugger info testing.");
   cl::Warning("This is debugger warning testing.");
   cl::Error("This is debugger error testing.");
   cl::Text("This is a random text..bubububububububububububbu.",ConsoleForeground::DARKCYAN);
+#endif
+
+#if 1
+  vector<clUi> pos;
+  pos.push_back(8);
+  pos.push_back(1);
+  pos.push_back(31);
+  pos.push_back(10);
+  cl::HighLightText("This is a printer,It's name is Jerry Chaos",ConsoleForeground::WHITE,pos,ConsoleForeground::RED);
+#endif
 }
 
 
@@ -263,8 +274,8 @@ int main(){
   //TestHS();
   //TestClass();
   //TestLog();
-  TestClType();
-  //TestDebugger();
+  //TestClType();
+  TestPrinter();
   //TestFolderAndFile();
   //TestRegexp();
   std::cout<<"Hello World! testbed end."<<std::endl;

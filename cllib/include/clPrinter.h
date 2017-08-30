@@ -3,6 +3,8 @@
 
 #include <windows.h>
 #include <string>
+#include <vector>
+#include "clTypes.h"
 
 namespace ConsoleForeground{
 enum{
@@ -26,11 +28,12 @@ enum{
 }
 
 namespace cl{
-void Unimportant(const std::string& s);
-void Info(const std::string& s);
-void Error(const std::string& s);
-void Warning(const std::string& s);
-void Text(const std::string& t,int color=ConsoleForeground::WHITE);
+void Text(const clString& s,int color=ConsoleForeground::WHITE);
+void HighLightText(const clString& s,clI color,std::vector<clUi>& pos,clI posColor);
+void Unimportant(const clString& s);
+void Info(const clString& s);
+void Warning(const clString& s);
+void Error(const clString& s);
 }
 
 #endif // DEBUG_H_INCLUDED
