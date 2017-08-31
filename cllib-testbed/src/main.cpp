@@ -199,7 +199,23 @@ void TestFolderAndFile(){
 
 void TestRegexp(){
   //string str="z:\\sfsfsf\\gggg\\efefef\\sxxx.zip";
-  string str=R"(z:\sfsfsf\gggg\efefef\sxxx.zip)";
+  string str=R"(z:\sfsfsf\gggg\efefe**f\sxxx.zip)";
+#if 1
+  clUi n=clRegexp::CountNumber(str,"\\*");
+  Info(NumberToString(n));
+#endif
+#if 0
+  vector<clString> out;
+  clString sufix=clRegexp::GetFirstMatch(str,R"(\w)",out,false);
+  if(sufix.length()>0){
+    for(clString s:out){
+      Info(s);
+    }
+    Warning(sufix);
+  } else{
+    Error("No matched string");
+  }
+#endif
 #if(0)
   cl::Info("string length:"+NumberToString(str.length()));
   string result;
@@ -217,7 +233,7 @@ void TestRegexp(){
   }
 #endif
 
-#if 1
+#if 0
   std::string s("this subject has a submarine as a subsequence");
   std::vector<string> out;
   clRegexp::ExecuteRegex(s,"\\b(sub)([^ ]*)",out);
@@ -275,9 +291,9 @@ int main(){
   //TestClass();
   //TestLog();
   //TestClType();
-  TestPrinter();
+  //TestPrinter();
   //TestFolderAndFile();
-  //TestRegexp();
+  TestRegexp();
   std::cout<<"Hello World! testbed end."<<std::endl;
   system("PAUSE");
   return 0;

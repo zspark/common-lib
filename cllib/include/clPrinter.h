@@ -30,10 +30,10 @@ enum{
 namespace cl{
 void Text(const clString& s,int color=ConsoleForeground::WHITE);
 void HighLightText(const clString& s,clI color,std::vector<clUi>& pos,clI posColor);
-void Unimportant(const clString& s);
-void Info(const clString& s);
-void Warning(const clString& s);
-void Error(const clString& s);
+void Unimportant(const clString& s,clB newLine=true);
+void Info(const clString& s,clB newLine=true);
+void Warning(const clString& s,clB newLine=true);
+void Error(const clString& s,clB newLine=true);
 }
 
 #endif // DEBUG_H_INCLUDED

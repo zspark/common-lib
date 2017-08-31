@@ -7,26 +7,30 @@ namespace cl{
 using namespace std;
 HANDLE static h=GetStdHandle(STD_OUTPUT_HANDLE);
 
-void Unimportant(const clString& s){
+void Unimportant(const clString& s,clB newLine){
   SetConsoleTextAttribute(h,ConsoleForeground::GRAY);
-  cout<<"[Unimportant] "+s<<endl;
+  cout<<"[Unimportant] "+s;
+  if(newLine)cout<<endl;
   //SetConsoleTextAttribute(h,ConsoleForeground::GRAY);
 }
 
-void Info(const clString& s){
+void Info(const clString& s,clB newLine){
   SetConsoleTextAttribute(h,ConsoleForeground::GREEN);
-  cout<<"[Info] "+s<<endl;
+  cout<<"[Info] "+s;
+  if(newLine)cout<<endl;
   SetConsoleTextAttribute(h,ConsoleForeground::GRAY);
 }
 
-void Error(const clString& s){
+void Error(const clString& s,clB newLine){
   SetConsoleTextAttribute(h,ConsoleForeground::RED);
-  cout<<"[Error] "+s<<endl;
+  cout<<"[Error] "+s;
+  if(newLine)cout<<endl;
   SetConsoleTextAttribute(h,ConsoleForeground::GRAY);
 }
-void Warning(const clString& s){
+void Warning(const clString& s,clB newLine){
   SetConsoleTextAttribute(h,ConsoleForeground::YELLOW);
-  cout<<"[Warning] "+s<<endl;
+  cout<<"[Warning] "+s;
+  if(newLine)cout<<endl;
   SetConsoleTextAttribute(h,ConsoleForeground::GRAY);
 }
 

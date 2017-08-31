@@ -11,6 +11,7 @@ typedef bool clB;
 typedef const char* clCcs;
 typedef char* clCs;
 typedef std::string clString;
+typedef std::string clStr;
 typedef char clC;
 
 template<typename T>

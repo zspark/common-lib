@@ -3,7 +3,7 @@
 #include "clTypes.h"
 #include "clRegexpUtil.h"
 
-#define __CLLIB_INTERNAL_DEBUG__
+#define __CLLIB_INTERNAL_DEBUG__ 1
 
 
 namespace cl{
@@ -18,6 +18,10 @@ namespace cl{
 
 //------------------------------------------------------------------------------------------
 
-
+#if __CLLIB_INTERNAL_DEBUG__
+#define F_DBG_ASSERT(s) if(!(s))throw "Assertion failure";
+#else
+#define F_DBG_ASSERT(s)
+#endif
 
 }
