@@ -21,7 +21,7 @@ enum clHierarchicalStructureNodeRelation{
 template<typename T>
 class clHierarchicalStructureNode_T{
 public:
-  clHierarchicalStructureNode_T(clUi id):m_id(id){};
+  clHierarchicalStructureNode_T(cluint id):m_id(id){};
   ~clHierarchicalStructureNode_T(){
     m_pParentdNode=nullptr;
     m_pPreSiblingNode=nullptr;
@@ -30,19 +30,19 @@ public:
   };
   clHierarchicalStructureNodeType GetType()const{ return m_type; }
   void SetType(clHierarchicalStructureNodeType type){ m_type=type; }
-  clUi GetId()const{ return m_id; }
+  cluint GetId()const{ return m_id; }
   clHierarchicalStructureNode_T* GetParentNode()const{ return m_pParentdNode; }
   clHierarchicalStructureNode_T* GetPreSiblingNode()const{ return m_pPreSiblingNode; }
   clHierarchicalStructureNode_T* GetNextSiblingNode()const{ return m_pNextSiblingNode; }
   clHierarchicalStructureNode_T* GetFirstChildNode()const{ return m_pFirstChildNode; }
 
-  //One cant change id of a exist node;void SetId(clUi id) { m_id=id; }
+  //One cant change id of a exist node;void SetId(cluint id) { m_id=id; }
 
   T mCustomObject;
 private:
   template<typename> friend class clHierarchicalStructure_T;
   //friend class clHierarchicalStructure;
-  clUi m_id;//unique;
+  cluint m_id;//unique;
   clHierarchicalStructureNodeType m_type;
   clHierarchicalStructureNode_T* m_pParentdNode=nullptr;
   clHierarchicalStructureNode_T* m_pPreSiblingNode=nullptr;
@@ -64,23 +64,23 @@ public:
   NODE* CreateNode();
 
   //return the node which has the given id, if not return nullptr;
-  NODE* GetNode(clUi id);
+  NODE* GetNode(cluint id);
 
   //return the last child node of the given node;if given node has no children then return nullptr;
   NODE* GetLastChildNode(NODE* node);
 
   //if node exist,then remove it from graph and delete it,and return it's first child node;
   //if not return nullptr;
-  NODE* DeleteNode(clUi id);
+  NODE* DeleteNode(cluint id);
 
   //this will delete all nodes which have the same parent id of id.
-  bool DeleteDecendantNodes(clUi id);
+  bool DeleteDecendantNodes(cluint id);
 
   //just return the node which has given id;if not return nullptr;
   // removeNode method will remove all relations of returning node except it's link to firstchildnode;
   // you can delete returned node yourself;
   // or adding it back to graph.
-  NODE* RemoveNode(clUi id);
+  NODE* RemoveNode(cluint id);
 
   //insert srcNode which has relation with targetNode to targetNode.
   //if targetNode is nullptr,means rootnode. in this case,all relation is ignord. we will 
@@ -88,10 +88,10 @@ public:
   bool InsertNode(NODE* targetNode,NODE* srcNode,clHierarchicalStructureNodeRelation relation);
 
   //return all children number of given node except it's decendant ;
-  clUi GetNumChildren(NODE* node)const;
+  cluint GetNumChildren(NODE* node)const;
 
   //return all children number of root node except it's decendant.
-  clUi GetNumChildren()const;
+  cluint GetNumChildren()const;
 
   //except root node,remember rootnode cant be destroyed!
   void DeleteAllNodes();
@@ -109,18 +109,18 @@ private:
   void RemoveRelation(NODE* node);
 
   //except root node ,all root node's children are at depth of 0;
-  clUi GetDepth(NODE* node);
+  cluint GetDepth(NODE* node);
 
   //return parent node if node is it's first child;
   //else return nullptr;
   NODE* IsNodeFirstChild(NODE* node);
-  clUi GetNextAvaliableNodeId();
+  cluint GetNextAvaliableNodeId();
 
   //delete node;
   bool DeleteDecendantNodes(NODE* node);
 
 private:
-  clUi m_uNextAvaliableId=1;
+  cluint m_uNextAvaliableId=1;
   NODE* const m_pRootNode;
   std::vector<NODE*> m_vecTraverse;
 };

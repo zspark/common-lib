@@ -9,27 +9,34 @@
 
 namespace cl{
 namespace clTypeUtil{
+
 using namespace std;
 
-void SplitString(string s,vector<string>* vec,clCcs delimiters){
-  clCs next_token;
-  clCs pch=::strtok_s(const_cast<clCs>(s.c_str()),delimiters,&next_token);
+static clstr s_StringTrim(clstr s,clstr format){
+  vector<clstr> vec;
+  clRegexp::ExecuteRegex(s,format,vec);
+  return vec.size()>1?vec[1]:"";
+}
+
+void SplitString(clstr s,vector<clstr>& vec,const clchar* delimiters){
+  clchar* next_token;
+  clchar* pch=::strtok_s(const_cast<clchar*>(s.c_str()),delimiters,&next_token);
   while(pch!=NULL){
-    vec->push_back(pch);
+    vec.push_back(pch);
     pch=::strtok_s(NULL,delimiters,&next_token);
   }
 }
 
-void CombineStrings(const std::vector<std::string>& vec,std::string* result,clCcs delimiters){
+void CombineStrings(const vector<clstr>& vec,clstr* result,const clchar* delimiters){
   *result="";
-  const string tmp{delimiters};
-  const clUi n=vec.size();
-  for(clI i=0;i<n;i++){
+  const clstr tmp{delimiters};
+  const cluint n=vec.size();
+  for(clint i=0;i<n;i++){
     *result=(*result)+tmp+vec[i];
   }
 }
 
-clUi GetDecimalLength(clUi dec){
+cluint GetDecimalLength(cluint dec){
   int flag=0;
   while(dec){
     dec/=10;
@@ -38,13 +45,19 @@ clUi GetDecimalLength(clUi dec){
   return flag;
 }
 
-string StringTrim(string s){
-  vector<string> vec;
-  clRegexp::ExecuteRegex(s,R"(\s*((.|\n)+\S)\s*)",vec);
-  return vec.size()>1?vec[1]:"";
+clstr StringTrim(clstr s){
+  return s_StringTrim(s,R"(\s*((.|\n)*\S)\s*)");
 }
 
-string fixToLength(clUi num,int n){
+clstr StringTrimLeft(clstr s){
+  return s_StringTrim(s,R"(\s*((.|\n)+))");
+}
+
+clstr StringTrimRight(clstr s){
+  return s_StringTrim(s,R"(((.|\n)+\S)\s*)");
+}
+
+clstr fixToLength(cluint num,clint n){
   if(GetDecimalLength(num)>n){
 #ifdef __CLLIB_INTERNAL_DEBUG__
     Warning("试图将一个更长的数字调整为长度较短的字符串，函数终止，并返回空字符串！");

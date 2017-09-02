@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "cllib.h"
+#include "clTypes.h"
 
 namespace cl{
 
@@ -23,12 +23,12 @@ public:
     V_NO_DOT_FOLDER=0x0100,
   };
   struct FFInfo{
-    clB isFolder;
-    string nameN;
-    string nameE;
-    string URL;
-    string parentPath;
-    string extension;
+    clbool isFolder;
+    clstr nameN;
+    clstr nameE;
+    clstr URL;
+    clstr parentPath;
+    clstr extension;
     const FFInfo* next=nullptr;
   };
 
@@ -36,7 +36,7 @@ public:
   * 移除文件，也可以移除空目录；
   * true if success;
   */
-  static bool Remove(const FFInfo*);
+  static clbool Remove(const FFInfo*);
 
   /**
   * copy file
@@ -44,11 +44,11 @@ public:
   * if desFolderPath is not exist, then returns false;
   * returns true if success
   */
-  static bool CopyFileTo(const FFInfo* info,string desFolderPath);
-  static bool CreateFolder(string folderPath);
-  static bool IsFolderExist(string folderPath);
-  static bool IsFileExist(string fileURL);
-  static string FixPathOrURL(string str);
+  static clbool CopyFileTo(const FFInfo* info,clstr desFolderPath);
+  static clbool CreateFolder(clstr folderPath);
+  static clbool IsFolderExist(clstr folderPath);
+  static clbool IsFileExist(clstr fileURL);
+  static clstr FixPathOrURL(clstr str);
 
 public:
   FolderAndFile();
@@ -57,7 +57,7 @@ public:
   /**
   * cout表示有多少个文件，可不传值；
   */
-  const FFInfo* Traverse(string rootPath,clUi flag,clI* count=nullptr);
+  const FFInfo* Traverse(clstr rootPath,cluint flag,clint* count=nullptr);
 
 private:
   const FFInfo* m_root;

@@ -2,17 +2,15 @@
 
 #include <string>
 
+typedef int clint;
+typedef unsigned int cluint;
+typedef float clfloat;
+typedef double cldouble;
+typedef bool clbool;
+typedef char clchar;
+typedef std::string clstr;
+
 namespace cl{
-typedef int clI;
-typedef unsigned int clUi;
-typedef float clF;
-typedef double clD;
-typedef bool clB;
-typedef const char* clCcs;
-typedef char* clCs;
-typedef std::string clString;
-typedef std::string clStr;
-typedef char clC;
 
 template<typename T>
 struct type_2T{
@@ -30,10 +28,10 @@ struct type_2T{
     y=another.y;
   }
 };
-typedef type_2T<clI> clI2;
-typedef type_2T<clUi> clUi2;
-typedef type_2T<clF> clF2;
-typedef type_2T<clD> clD2;
+typedef type_2T<clint> clI2;
+typedef type_2T<cluint> clUi2;
+typedef type_2T<clfloat> clF2;
+typedef type_2T<cldouble> clD2;
 
 template<typename T>
 struct type_3T{
@@ -52,10 +50,10 @@ struct type_3T{
     z=another.z;
   }
 };
-typedef type_3T<clI> clI3;
-typedef type_3T<clUi> clUi3;
-typedef type_3T<clF> clF3;
-typedef type_3T<clD> clD3;
+typedef type_3T<clint> clI3;
+typedef type_3T<cluint> clUi3;
+typedef type_3T<clfloat> clF3;
+typedef type_3T<cldouble> clD3;
 
 template<typename T>
 struct type_4T{
@@ -76,10 +74,10 @@ struct type_4T{
     w=another.w;
   }
 };
-typedef type_4T<clI> clI4;
-typedef type_4T<clUi> clUi4;
-typedef type_4T<clF> clF4;
-typedef type_4T<clD> clD4;
+typedef type_4T<clint> clI4;
+typedef type_4T<cluint> clUi4;
+typedef type_4T<clfloat> clF4;
+typedef type_4T<cldouble> clD4;
 
 enum clUniformType{
   CL_INT=0,
@@ -109,12 +107,12 @@ struct clUniform{
   clUniform(){}
   clUniformType type;
   union{
-    clI intValue;
-    clUi uintValue;
-    float floatValue;
-    double doubleValue;
-    bool boolValue;
-    clCcs charValue;
+    clint intValue;
+    cluint uintValue;
+    clfloat floatValue;
+    cldouble doubleValue;
+    clbool boolValue;
+    clchar charValue;
 
     clF2 float2Value;
     clI2 int2Value;
@@ -132,4 +130,5 @@ struct clUniform{
     clD4 double4Value;
   };
 };
+
 }

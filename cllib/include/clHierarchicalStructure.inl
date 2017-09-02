@@ -5,7 +5,7 @@
 
 namespace cl{
 template<typename NODE>
-clUi clHierarchicalStructure_T<NODE>::GetNextAvaliableNodeId(){
+cluint clHierarchicalStructure_T<NODE>::GetNextAvaliableNodeId(){
   return m_uNextAvaliableId++;
 }
 
@@ -16,7 +16,7 @@ NODE* clHierarchicalStructure_T<NODE>::CreateNode(){
 }
 
 template<typename NODE>
-NODE* clHierarchicalStructure_T<NODE>::GetNode(clUi id){
+NODE* clHierarchicalStructure_T<NODE>::GetNode(cluint id){
   if(m_pRootNode->m_pFirstChildNode==nullptr)return nullptr;
   std::vector<NODE*> vec;
   vec.push_back(m_pRootNode->m_pFirstChildNode);
@@ -47,7 +47,7 @@ NODE* clHierarchicalStructure_T<NODE>::GetLastChildNode(NODE* node){
 }
 
 template<typename NODE>
-NODE* clHierarchicalStructure_T<NODE>::DeleteNode(clUi id){
+NODE* clHierarchicalStructure_T<NODE>::DeleteNode(cluint id){
   NODE* tmpNode=GetNode(id);
   if(tmpNode==nullptr)return nullptr;
   else{
@@ -78,7 +78,7 @@ bool clHierarchicalStructure_T<NODE>::DeleteDecendantNodes(NODE* node){
 }
 
 template<typename NODE>
-bool clHierarchicalStructure_T<NODE>::DeleteDecendantNodes(clUi id){
+bool clHierarchicalStructure_T<NODE>::DeleteDecendantNodes(cluint id){
   NODE* tmpNode=GetNode(id);
   if(tmpNode==nullptr)return false;
   return DeleteDecendantNodes(tmpNode);
@@ -135,7 +135,7 @@ void clHierarchicalStructure_T<NODE>::RemoveRelation(NODE* node){
 }
 
 template<typename NODE>
-NODE* clHierarchicalStructure_T<NODE>::RemoveNode(clUi id){
+NODE* clHierarchicalStructure_T<NODE>::RemoveNode(cluint id){
   NODE* tmpNode=GetNode(id);
   if(tmpNode==nullptr)return nullptr;
   else{
@@ -223,8 +223,8 @@ bool clHierarchicalStructure_T<NODE>::InsertNode(NODE* targetNode,NODE* srcNode,
 }
 
 template<typename NODE>
-clUi clHierarchicalStructure_T<NODE>::GetNumChildren(NODE* node)const{
-  clUi sum=0;
+cluint clHierarchicalStructure_T<NODE>::GetNumChildren(NODE* node)const{
+  cluint sum=0;
   NODE* tmpNode=node->m_pFirstChildNode;
   while(tmpNode!=nullptr){
     sum++;
@@ -234,13 +234,13 @@ clUi clHierarchicalStructure_T<NODE>::GetNumChildren(NODE* node)const{
 }
 
 template<typename NODE>
-clUi clHierarchicalStructure_T<NODE>::GetNumChildren()const{
+cluint clHierarchicalStructure_T<NODE>::GetNumChildren()const{
   return GetNumChildren(m_pRootNode);
 }
 
 template<typename NODE>
-clUi clHierarchicalStructure_T<NODE>::GetDepth(NODE* node){
-  clUi depth(0);
+cluint clHierarchicalStructure_T<NODE>::GetDepth(NODE* node){
+  cluint depth(0);
   NODE* tmpNode=node->m_pParentdNode;
   while(tmpNode!=m_pRootNode){
     depth++;
@@ -252,7 +252,7 @@ clUi clHierarchicalStructure_T<NODE>::GetDepth(NODE* node){
 template<typename NODE>
 void clHierarchicalStructure_T<NODE>::Print(){
   using namespace std;
-  const clUi perDepthWidth(5);
+  const cluint perDepthWidth(5);
   cout<<setiosflags(ios::left)<<setw(10)<<"Root:id=0"<<std::endl;
 
   if(m_pRootNode->m_pFirstChildNode==nullptr)return;
@@ -267,7 +267,7 @@ void clHierarchicalStructure_T<NODE>::Print(){
     if(tmpNode->m_pFirstChildNode!=nullptr)
       vec.push_back(tmpNode->m_pFirstChildNode);
 
-    clUi w=(2+GetDepth(tmpNode))*perDepthWidth;
+    cluint w=(2+GetDepth(tmpNode))*perDepthWidth;
     cout<<setiosflags(ios::left)<<setw(w)<<""<<"id="<<tmpNode->m_id<<std::endl;
   }
   return;

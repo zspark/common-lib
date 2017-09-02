@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sstream>
 #include <cstdlib>
 #include <vector>
 #include "clTypes.h"
@@ -7,10 +8,19 @@
 namespace cl{
 namespace clTypeUtil{
 
-void SplitString(std::string s,std::vector<std::string>* vec,clCcs delimiters);
-void CombineStrings(const std::vector<std::string>& vec,std::string* result,clCcs delimiters);
-clUi GetDecimalLength(clUi);
-std::string StringTrim(std::string s);
+void SplitString(clstr s,std::vector<clstr>& vec,const clchar* delimiters);
+void CombineStrings(const std::vector<clstr>& vec,clstr* result,const clchar* delimiters);
+cluint GetDecimalLength(cluint);
+clstr StringTrim(clstr s);
+clstr StringTrimLeft(clstr s);
+clstr StringTrimRight(clstr s);
+
+template <typename T>
+clstr NumberToString(T Number){
+  ostringstream ss;
+  ss<<Number;
+  return ss.str();
+}
 
 template<typename T,typename T2>
 T Make(T2 a,T2 b){

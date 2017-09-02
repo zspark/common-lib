@@ -1,12 +1,10 @@
 #include <iostream>
 #include "clHierarchicalStructure.h"
 #include "cllib.h"
-#include "Log.h"
 #include "clTypeUtil.h"
 #include "clRegexpUtil.h"
 #include "clPrinter.h"
 #include "clFolderAndFile.h"
-#include "clUtil.h"
 
 using namespace cl;
 
@@ -60,9 +58,6 @@ void TestClass(){
 
 
 void TestLog(){
-  _LOGSYNCON
-    _LOGWITHSYNC("Hello World!")
-    Log(Log::LL_ERROR,"lalala");
 }
 
 
@@ -77,7 +72,7 @@ void TestPrinter(){
 #endif
 
 #if 1
-  vector<clUi> pos;
+  vector<cluint> pos;
   pos.push_back(8);
   pos.push_back(1);
   pos.push_back(31);
@@ -92,13 +87,13 @@ void TestClType(){
 #if(0)
   clI2 int2_1,int2_2;
   int2_1.Set(30);
-  clTypeUtil::Set<clI2,clI>(int2_1,2,3);
+  clTypeUtil::Set<clI2,clint>(int2_1,2,3);
   clTypeUtil::CopyAtoB(int2_2,int2_1);
-  //clTypeUtil::SetToaa<clI2,clI>(int2_1,2,3);
+  //clTypeUtil::SetToaa<clI2,clint>(int2_1,2,3);
   std::cout<<int2_2.x<<" "<<int2_2.y<<std::endl;
 
   clF3 f1,f2,f3;
-  clTypeUtil::Set<clF3,clF>(f1,2.1f,3.0f,4.0f);
+  clTypeUtil::Set<clF3,clfloat>(f1,2.1f,3.0f,4.0f);
   clTypeUtil::CopyAtoB(f3,f1);
   std::cout<<f3.x<<" "<<f3.y<<" "<<f3.z<<std::endl;
   std::cout<<f1.x<<" "<<f1.y<<" "<<f1.z<<std::endl;
@@ -128,10 +123,13 @@ void TestClType(){
 #endif
 
 #if 1
-  Info("||"+clTypeUtil::StringTrim("   sfsfggg   ")+"||");
-  Info("||"+clTypeUtil::StringTrim("   sfsfggg\n he   ")+"||");
+  Unimportant("String is:||   sfsfggg\n he   ||");
+  NewLine();
+  Info("||"+clTypeUtil::StringTrimLeft("   sfsfggg   ")+"||");
+  NewLine();
+  Info("||"+clTypeUtil::StringTrimRight("   sfsfggg\n he   ")+"||");
+  NewLine();
   Info("||"+clTypeUtil::StringTrim("   ")+"||");
-  Info("||   sfsfggg\n he   ||");
 #endif
 }
 
@@ -148,7 +146,7 @@ void TestFolderAndFile(){
     }
     return;
 #endif
-  clI n;
+  clint n;
   //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2",FolderAndFile::V_ALL,&n);
   //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FOLDER,&n);
   //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FILE,&n);
@@ -192,23 +190,39 @@ void TestFolderAndFile(){
 
     info=info->next;
   }
-  cl::Text("TOTAL::"+cl::NumberToString(n));
+  cl::Text("TOTAL::"+clTypeUtil::NumberToString(n));
 
 }
 
 
 void TestRegexp(){
   //string str="z:\\sfsfsf\\gggg\\efefef\\sxxx.zip";
-  string str=R"(z:\sfsfsf\gggg\efefe**f\sxxx.zip)";
+  string str=R"(zsssfgeghg:\sfsfsf\gggg\efefe**f\sxxx.zip)";
 #if 1
-  clUi n=clRegexp::CountNumber(str,"\\*");
+  if(clRegexp::IsStartedWith(str,"zsssfgeghg:\\sf"))Info("Yes");
+  else Info("No");
+  if(clRegexp::IsEndedWith(str,"sxxx.aip"))Info("Yes");
+  else Info("No");
+#endif
+#if 0
+  vector<cluint> out;
+  clbool b=clRegexp::GetIndices(str,"\\*",out);
+  if(b){
+    for(clint i=0;i<out.size();i++){
+      Info(NumberToString(out[i]));
+    }
+  } else Info("No one!");
+#endif
+
+#if 0
+  cluint n=clRegexp::CountNumber(str,"\\*");
   Info(NumberToString(n));
 #endif
 #if 0
-  vector<clString> out;
-  clString sufix=clRegexp::GetFirstMatch(str,R"(\w)",out,false);
+  vector<clstr> out;
+  clstr sufix=clRegexp::GetFirstMatch(str,R"(\w{1,1})",out,false);
   if(sufix.length()>0){
-    for(clString s:out){
+    for(clstr s:out){
       Info(s);
     }
     Warning(sufix);
@@ -238,7 +252,7 @@ void TestRegexp(){
   std::vector<string> out;
   clRegexp::ExecuteRegex(s,"\\b(sub)([^ ]*)",out);
 
-  for(clI i=0;i<out.size();i++){
+  for(clint i=0;i<out.size();i++){
     Info("index:"+NumberToString(i)+" value:"+out[i]);
   }
 

@@ -28,12 +28,20 @@ enum{
 }
 
 namespace cl{
-void Text(const clString& s,int color=ConsoleForeground::WHITE);
-void HighLightText(const clString& s,clI color,std::vector<clUi>& pos,clI posColor);
-void Unimportant(const clString& s,clB newLine=true);
-void Info(const clString& s,clB newLine=true);
-void Warning(const clString& s,clB newLine=true);
-void Error(const clString& s,clB newLine=true);
+
+void Text(const clstr& s,clint color=ConsoleForeground::WHITE,clbool newLine=true);
+
+void HighLightText(
+  const clstr& s,clint color
+  ,std::vector<cluint>& pos,clint posColor
+  ,clbool newLine=true);
+
+void Unimportant(const clstr& s,clbool newLine=true,clbool mark=true);
+void Info(const clstr& s,clbool newLine=true,clbool mark=true);
+void Warning(const clstr& s,clbool newLine=true,clbool mark=true);
+void Error(const clstr& s,clbool newLine=true,clbool mark=true);
+void NewLine();
+
 }
 
 #endif // DEBUG_H_INCLUDED

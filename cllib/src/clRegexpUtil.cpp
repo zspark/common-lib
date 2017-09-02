@@ -6,7 +6,7 @@ namespace cl{
 namespace clRegexp{
 using namespace std;
 
-clString GetFirstMatch(clString str,T_REGEXP_STRING format,vector<clString>& out,clB caseSensitive){
+clstr GetFirstMatch(clstr str,T_REGEXP_STRING format,vector<clstr>& out,clbool caseSensitive){
   regex e;
   if(caseSensitive)e.assign(format);
   else e.assign(format,regex::icase);
@@ -20,25 +20,25 @@ clString GetFirstMatch(clString str,T_REGEXP_STRING format,vector<clString>& out
   return "";
 }
 
-clB Contain(clString str,T_REGEXP_STRING format,clB caseSensitive){
+clbool Contain(clstr str,T_REGEXP_STRING format,clbool caseSensitive){
   regex e;
   if(caseSensitive)e.assign(format);
   else e.assign(format,regex::icase);
   return regex_search(str,e);
 }
 
-clB Match(clString str,T_REGEXP_STRING format,clB caseSensitive){
+clbool Match(clstr str,T_REGEXP_STRING format,clbool caseSensitive){
   regex e;
   if(caseSensitive)e.assign(format);
   else e.assign(format,regex::icase);
   return regex_match(str,e);
 }
 
-clString Replace(clString str,clString from,clString to){
-  const clUi len=from.length();
-  clString::size_type pos(0);
+clstr Replace(clstr str,clstr from,clstr to){
+  const cluint len=from.length();
+  clstr::size_type pos(0);
   while(true){
-    if((pos=str.find(from,pos))!=clString::npos){
+    if((pos=str.find(from,pos))!=clstr::npos){
       str.replace(pos,len,to);
       pos+=len;
     } else break;
@@ -46,7 +46,7 @@ clString Replace(clString str,clString from,clString to){
   return str;
 }
 
-void ExecuteRegex(clString str,T_REGEXP_STRING format,vector<clString>& out){
+void ExecuteRegex(clstr str,T_REGEXP_STRING format,vector<clstr>& out){
   regex e(format);
   smatch m;
   int i=0;
@@ -58,33 +58,66 @@ void ExecuteRegex(clString str,T_REGEXP_STRING format,vector<clString>& out){
   }
 }
 
-clB IsEndedWith(clString str,clString sufix,clB caseSensitive){
-  T_REGEXP_STRING tmp;
-  tmp=sufix+"$";
-  regex e;
-  if(caseSensitive)e.assign(tmp);
-  else e.assign(tmp,regex::icase);
-  return regex_search(str,e);
-}
-clB IsStartedWith(clString str,clString prefix,clB caseSensitive){
-  T_REGEXP_STRING tmp;
-  tmp="^"+prefix;
-  regex e;
-  if(caseSensitive)e.assign(tmp);
-  else e.assign(tmp,regex::icase);
-  return regex_search(str,e);
+clbool IsEndedWith(clstr str,clstr subs,clbool caseSensitive){
+  const cluint subsLen=subs.size();
+  const cluint strLen=str.size();
+  if(subsLen>strLen)return false;
+  else{
+    if(subsLen<=0)return false;
+    clint j=strLen-1;
+    clint i=subsLen-1;
+    for(;i>=0;){
+      if(str[j]!=subs[i])return false;
+      j--;i--;
+    }
+  }
+  return true;
 }
 
-clUi CountNumber(clString str,T_REGEXP_STRING format){
+clbool IsStartedWith(clstr str,clstr subs,clbool caseSensitive){
+#if 0
+  if(subs.size()>str.size())return false;
+  auto index=str.find_first_of(subs);
+  return index==0;
+#else
+  const cluint subsLen=subs.size();
+  if(subsLen>str.size())return false;
+  else{
+    if(subsLen<=0)return false;
+    for(cluint i=0;i<subsLen;i++){
+      if(str[i]!=subs[i])return false;
+    }
+  }
+  return true;
+#endif
+}
+
+cluint CountNumber(clstr str,T_REGEXP_STRING format){
   regex e(format);
   smatch m;
   int i=0;
-  clUi n=0;
+  cluint n=0;
   while(regex_search(str,m,e)){
     n++;
     str=m.suffix().str();
   }
   return n;
+}
+
+clbool GetIndices(clstr str,T_REGEXP_STRING format,vector<cluint>& out){
+  regex e(format);
+  smatch m;
+  int i=0;
+  cluint sum=0;
+  cluint n=0;
+  while(regex_search(str,m,e)){
+    n++;
+    sum+=m.prefix().length();
+    out.push_back(sum);
+    sum++;
+    str=m.suffix().str();
+  }
+  return n>0;
 }
 
 
