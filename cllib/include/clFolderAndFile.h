@@ -45,6 +45,7 @@ public:
   * returns true if success
   */
   static clbool CopyFileTo(const FFInfo* info,clstr desFolderPath);
+  static clbool CopyFileTo(clstr fromURL,clstr toURL);
   static clbool CreateFolder(clstr folderPath);
   static clbool IsFolderExist(clstr folderPath);
   static clbool IsFileExist(clstr fileURL);

@@ -98,6 +98,10 @@ clbool FolderAndFile::CopyFileTo(const FFInfo* info,clstr desFolderPath){
   } else return false;
 }
 
+clbool FolderAndFile::CopyFileTo(clstr fromURL,clstr toURL){
+  return CopyFile(fromURL.c_str(),toURL.c_str(),false);
+}
+
 clbool FolderAndFile::CreateFolder(clstr folderPath){
   vector<clstr> vec;
   clTypeUtil::SplitString(folderPath.c_str(),vec,"/");

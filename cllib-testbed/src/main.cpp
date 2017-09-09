@@ -1,5 +1,4 @@
 #include <iostream>
-#include "clHierarchicalStructure.h"
 #include "cllib.h"
 #include "clTypeUtil.h"
 #include "clRegexpUtil.h"
@@ -8,23 +7,7 @@
 
 using namespace cl;
 
-void TestHS(){
-  typedef clHierarchicalStructureNode_T<int> NodeInt;
-  typedef clHierarchicalStructure_T<NodeInt> SHInt;
 
-  SHInt sh;
-  NodeInt* node=sh.CreateNode();
-  node->mCustomObject=10.0f;
-  sh.InsertNode(nullptr,node,clHierarchicalStructureNodeRelation::R_FIRST_CHILD);
-
-  NodeInt* node2=sh.CreateNode();
-  node2->mCustomObject=1010;
-  sh.InsertNode(node,node2,clHierarchicalStructureNodeRelation::R_FIRST_CHILD);
-
-
-  sh.Print();
-
-}
 
 
 class A{
@@ -135,62 +118,6 @@ void TestClType(){
 
 
 void TestFolderAndFile(){
-  string rootPath="z:\\temp/folder";
-  rootPath=FolderAndFile::FixPathOrURL(rootPath);
-  FolderAndFile ff;
-#if(0)
-    if(!ff.CreateFolder("z:/tesf/sge/sfsf")){//fail;
-    //if(!ff.CreateFolder("temp3/aa/")){
-    //if(!ff.CreateFolder("z:/temp2/sss/aaa/")){
-      cl::Error("Creating folder failed, mybe it's already exist!");
-    }
-    return;
-#endif
-  clint n;
-  //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2",FolderAndFile::V_ALL,&n);
-  //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FOLDER,&n);
-  //cl::cFFInfo* info=ff.Traverse("z:/pbrt-v2/",FolderAndFile::V_FILE,&n);
-  //cl::cFFInfo* info=ff.Traverse("z:/temp/",FolderAndFile::V_ALL,&n);
-  cl::cFFInfo* info=ff.Traverse(rootPath,FolderAndFile::V_ALL|FolderAndFile::V_NO_DOT_FOLDER,&n);
-
-
-  string targetPath="z:/temp2\\folder";
-  targetPath=FolderAndFile::FixPathOrURL(targetPath);
-  FolderAndFile::CreateFolder(targetPath);
-
-
-  while(info){
-#if(1)
-    if(info->isFolder){
-      if(!FolderAndFile::IsFolderExist(targetPath+info->nameN))
-        FolderAndFile::CreateFolder(targetPath+info->nameN);
-    } else{
-      if(!FolderAndFile::IsFileExist(targetPath+info->nameE)){
-        if(!FolderAndFile::CopyFileTo(info,targetPath)){
-          cl::Error("File: "+info->URL+" coping failed!");
-        }
-      }
-    }
-#endif
-
-#if(0)
-    if(info->isFolder)cl::Text(info->nameN);
-    else cl::Text(info->nameN+"."+info->extension);
-#else
-    if(info->isFolder)cl::Text(info->URL,ConsoleForeground::RED);
-    else cl::Text(info->URL,ConsoleForeground::GREEN);
-#endif
-#if(0)
-    if(!ff.Remove(info)){
-      cl::Error("File: "+info->URL+" did not removed!");
-    }
-#endif
-
-
-
-    info=info->next;
-  }
-  cl::Text("TOTAL::"+clTypeUtil::NumberToString(n));
 
 }
 
@@ -198,7 +125,11 @@ void TestFolderAndFile(){
 void TestRegexp(){
   //string str="z:\\sfsfsf\\gggg\\efefef\\sxxx.zip";
   string str=R"(zsssfgeghg:\sfsfsf\gggg\efefe**f\sxxx.zip)";
-#if 1
+#if 0
+  str=R"(')";
+  Info(str);
+#endif
+#if 0
   if(clRegexp::IsStartedWith(str,"zsssfgeghg:\\sf"))Info("Yes");
   else Info("No");
   if(clRegexp::IsEndedWith(str,"sxxx.aip"))Info("Yes");
@@ -220,7 +151,9 @@ void TestRegexp(){
 #endif
 #if 0
   vector<clstr> out;
-  clstr sufix=clRegexp::GetFirstMatch(str,R"(\w{1,1})",out,false);
+  str=R"("E:/r/")";
+  //clstr sufix=clRegexp::GetFirstMatch(str,R"(\w{1,1})",out,false);
+  clstr sufix=clRegexp::GetFirstMatch(str,R"([^"]+)",out,true);
   if(sufix.length()>0){
     for(clstr s:out){
       Info(s);
@@ -235,6 +168,17 @@ void TestRegexp(){
   string result;
   result=ReplaceBackSlashToSlash(str);
   cl::Info("\""+str+"\" repalced to"+" \""+result+"\"");
+#endif
+
+#if 1
+  //const string e="z";
+  str="aab3*";
+  const string e=R"(^[^\\/\*:\?"<>\|]+$)";
+  if(clRegexp::Match(str,e)){
+    Info(str+" is matched");
+  } else{
+    Info(str+" is not matched");
+  }
 #endif
 
 #if(0)
@@ -301,13 +245,12 @@ void TestRegexp(){
 
 int main(){
   std::cout<<"Hello World! testbed begin."<<std::endl;
-  //TestHS();
   //TestClass();
   //TestLog();
   //TestClType();
   //TestPrinter();
-  //TestFolderAndFile();
-  TestRegexp();
+  TestFolderAndFile();
+  //TestRegexp();
   std::cout<<"Hello World! testbed end."<<std::endl;
   system("PAUSE");
   return 0;

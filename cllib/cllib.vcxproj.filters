@@ -41,11 +41,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\clHierarchicalStructure.inl">
-      <Filter>头文件</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\clFolderAndFile.cpp">
       <Filter>源文件</Filter>
     </ClCompile>

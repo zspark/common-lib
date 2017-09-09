@@ -7,7 +7,7 @@ using namespace std;
 int main(){
   cl::Info("Hello World!");
 
-  cl::Info(cl::IS_PNG_FILE("sfsf.png")?"Is":"Is not");
+  //cl::Info(cl::IS_PNG_FILE("sfsf.png")?"Is":"Is not");
   
 
   system("pause");

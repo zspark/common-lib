@@ -8,6 +8,11 @@
 #endif
 
 namespace cl{
+cluint GetUniqueUint(){
+  static cluint id=0;
+  return ++id;
+}
+
 namespace clTypeUtil{
 
 using namespace std;
