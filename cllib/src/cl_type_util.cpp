@@ -1,21 +1,17 @@
-//#include <stdio.h>
 #include <vector>
-#include "cllib.h"
-#include "clTypeUtil.h"
-#include "clRegexpUtil.h"
-#ifdef __CLLIB_INTERNAL_DEBUG__
-#include "clPrinter.h"
-#endif
+#include "cl_type_util.h"
+#include "cl_regexp_util.h"
+
+using namespace std;
 
 namespace cl{
+
 cluint GetUniqueUint(){
   static cluint id=0;
   return ++id;
 }
 
 namespace clTypeUtil{
-
-using namespace std;
 
 static clstr s_StringTrim(clstr s,clstr format){
   vector<clstr> vec;
@@ -62,11 +58,10 @@ clstr StringTrimRight(clstr s){
   return s_StringTrim(s,R"(((.|\n)+\S)\s*)");
 }
 
+/*
 clstr fixToLength(cluint num,clint n){
   if(GetDecimalLength(num)>n){
-#ifdef __CLLIB_INTERNAL_DEBUG__
-    Warning("试图将一个更长的数字调整为长度较短的字符串，函数终止，并返回空字符串！");
-#endif
+    F_DBG_Warning("试图将一个更长的数字调整为长度较短的字符串，函数终止，并返回空字符串！");
     return "";
   }
   char f[10];
@@ -75,7 +70,7 @@ clstr fixToLength(cluint num,clint n){
   sprintf_s(c,f,num);
   return c;
 }
-
+*/
 
 
 }

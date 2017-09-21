@@ -3,7 +3,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <vector>
-#include "clTypes.h"
+#include "cl_types.h"
 
 namespace cl{
 namespace clTypeUtil{

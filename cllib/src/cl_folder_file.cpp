@@ -1,11 +1,11 @@
+#include "cl_folder_file.h"
 #include <stdio.h>
 #include <regex>
 #include <corecrt_io.h>
 #include "core\dirent.h"
-#include "clFolderAndFile.h"
-#include "clTypeUtil.h"
-#include "clPrinter.h"
-#include "clRegexpUtil.h"
+#include "core\cl_lib_compile.h"
+#include "cl_type_util.h"
+#include "cl_regexp_util.h"
 
 namespace cl{
 
@@ -133,17 +133,13 @@ clbool FolderAndFile::IsFileExist(clstr fileURL){
 clstr FolderAndFile::FixPathOrURL(clstr str){
   clstr result=clRegexp::Replace(str,"\\","/");
   if(!clRegexp::IsEndedWith(str,R"(/)")){
-#ifdef __CLLIB_INTERNAL_DEBUG__
-    Warning("path \""+str+"\" is not ended with '/'");
-#endif
+    F_DBG_Warning("path \""+str+"\" is not ended with '/'");
     result+='/';
   } 
 
   if(!clRegexp::Contain(str,"^[a~zA~Z]:")){
     if(!clRegexp::IsStartedWith(str,R"(\.)")){
-#ifdef __CLLIB_INTERNAL_DEBUG__
-      Warning("path \""+str+"\" is not beginned with '.'");
-#endif
+      F_DBG_Warning("path \""+str+"\" is not beginned with '.'");
       result="./"+result;
     }
   }

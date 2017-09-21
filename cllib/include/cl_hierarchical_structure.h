@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cllib.h"
+#include "core\cl_lib_compile.h"
 #if __CLLIB_INTERNAL_DEBUG__
 #include <iostream>
 #include <iomanip>
@@ -282,8 +282,8 @@ public:
   }
 
   //print graph info;
-#if __CLLIB_INTERNAL_DEBUG__
   void Print()const{
+#if __CLLIB_INTERNAL_DEBUG__
     using namespace std;
     const cluint perDepthWidth(3);
     //std::cout<<setiosflags(ios::left)<<setw(10)<<"Root:id=0"<<std::endl;
@@ -304,8 +304,8 @@ public:
       std::cout<<setiosflags(ios::left)<<setw(w)<<""<<"id="<<tmpNode->m_id<<std::endl;
     }
     return;
-  }
 #endif
+  }
 
 
 private:

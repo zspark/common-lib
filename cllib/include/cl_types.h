@@ -131,4 +131,6 @@ struct clUniform{
   };
 };
 
+cluint GetUniqueUint();
+
 }

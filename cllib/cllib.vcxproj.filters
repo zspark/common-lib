@@ -15,42 +15,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\clTypes.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\clHierarchicalStructure.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\clTypeUtil.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\dirent.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\clFolderAndFile.h">
+    <ClInclude Include="include\cl_console.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\clPrinter.h">
+    <ClInclude Include="include\cl_folder_file.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\cllib.h">
+    <ClInclude Include="include\cl_hierarchical_structure.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\clRegexpUtil.h">
+    <ClInclude Include="include\cl_regexp_util.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cl_types.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cl_type_util.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\cl_lib_compile.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\clFolderAndFile.cpp">
+    <ClCompile Include="src\cl_console.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\clPrinter.cpp">
+    <ClCompile Include="src\cl_folder_file.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\clTypeUtil.cpp">
+    <ClCompile Include="src\cl_regexp_util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\clRegexpUtil.cpp">
+    <ClCompile Include="src\cl_type_util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,10 +1,10 @@
 #include <regex>
-#include "cllib.h"
-#include "clRegexpUtil.h"
+#include "cl_regexp_util.h"
+
+using namespace std;
 
 namespace cl{
 namespace clRegexp{
-using namespace std;
 
 clstr GetFirstMatch(clstr str,T_REGEXP_STRING format,vector<clstr>& out,clbool caseSensitive){
   regex e;

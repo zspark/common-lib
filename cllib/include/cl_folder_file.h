@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "clTypes.h"
+#include "cl_types.h"
 
 namespace cl{
 

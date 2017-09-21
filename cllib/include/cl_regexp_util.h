@@ -1,7 +1,7 @@
 #pragma once
 
-#include "clTypes.h"
 #include <vector>
+#include "cl_types.h"
 
 namespace cl{
 namespace clRegexp{
