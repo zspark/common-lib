@@ -41,8 +41,8 @@ public:
   T customObject;
 
 private:
-  template<typename,template<typename>class>friend class clHS_T;
-  //template<T,template<typename>class> friend class clHS_T;
+  //template<typename,template<typename>class>friend class clHS_T;
+  template<T,template<typename>class> friend class clHS_T;
 
   cluint m_id;//unique;
   clHSNode_T* m_pParentNode=nullptr;
