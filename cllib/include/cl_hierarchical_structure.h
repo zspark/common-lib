@@ -38,11 +38,11 @@ public:
   clHSNode_T* GetFirstChildNode()const{ return m_pFirstChildNode; }
 
   //One cant change id of a exist node;void SetId(cluint id) { m_id=id; }
-  T customObject;
+  T* customObject=nullptr;
 
 private:
-  //template<typename,template<typename>class>friend class clHS_T;
-  template<T,template<typename>class> friend class clHS_T;
+  template<typename,template<typename>class>friend class clHS_T;
+  //template<T,template<typename>class> friend class clHS_T;
 
   cluint m_id;//unique;
   clHSNode_T* m_pParentNode=nullptr;
@@ -71,6 +71,9 @@ public:
   */
   NODE<T>* CreateNode(){
     NODE<T>* node=new NODE<T>(GetUniqueUint());
+    node->
+    NODE<clint> node2=new NODE<clint>(1);
+    node2->
     return node;
   }
 

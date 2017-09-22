@@ -1,30 +1,28 @@
 #pragma once
-#include "clTypes.h"
+#include "clguiComponentVariable.h"
 
-namespace clgui {
+namespace clgui{
 
-	enum clguiEventType {
-		clgui_EVT_BUTTON_CLICK=0,
-		clgui_EVT_MENUITEM_STATUS_CHANGE,
-		clgui_EVT_SLIDER_VALUE_CHANGE,
-		clgui_EVT_CHECKBOX_SELECTION_CHANGE,
-		clgui_EVT_WINDOW_CLOSE,
-	};
+enum clguiEventType{
+  CLGUI_EVT_BUTTON_CLICK=0,
+  CLGUI_EVT_MENUITEM_STATUS_CHANGE,
+  CLGUI_EVT_SLIDER_VALUE_CHANGE,
+  CLGUI_EVT_CHECKBOX_SELECTION_CHANGE,
+  CLGUI_EVT_WINDOW_CLOSE,
+};
 
 
-	class clguiEvent {
-	public:
-		clguiEvent()=delete;
-		clguiEvent(clguiEventType type);
-		virtual ~clguiEvent();
-		void StopPropagation();
-		clguiEventType GetType()const;
-		cl::clUniformVariable oldValue;
-		cl::clUniformVariable newValue;
+class clguiEvent{
+public:
+  clguiEvent()=delete;
+  clguiEvent(clguiEventType type):m_type(type){};
+  virtual ~clguiEvent(){};
+  clguiEventType GetType()const{ return m_type; };
+  UniformComponentVariable oldValue;
+  UniformComponentVariable newValue;
 
-	private:
-		friend class clguiObject;
-		const clguiEventType m_type;
-		bool m_bStopPropagation=false;
-	};
+private:
+  const clguiEventType m_type;
+  clbool m_bStopPropagation=false;
+};
 }

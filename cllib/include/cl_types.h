@@ -2,6 +2,7 @@
 
 #include <string>
 
+typedef size_t clsize;
 typedef int clint;
 typedef unsigned int cluint;
 typedef float clfloat;
