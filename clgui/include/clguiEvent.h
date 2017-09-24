@@ -1,7 +1,11 @@
 #pragma once
 #include "clguiComponentVariable.h"
 
-namespace clgui{
+CLGUI_NAMESPACE_START
+
+class clguiInteractive;
+class clguiEvent;
+typedef void CallBackEventFn(const clguiEvent*);
 
 enum clguiEventType{
   CLGUI_EVT_BUTTON_CLICK=0,
@@ -15,14 +19,25 @@ enum clguiEventType{
 class clguiEvent{
 public:
   clguiEvent()=delete;
-  clguiEvent(clguiEventType type):m_type(type){};
+  clguiEvent(const clguiEvent&)=delete;
+  clguiEvent(clguiEventType type,const clguiInteractive* sender)
+    :m_type(type),m_eventSender(sender){};
   virtual ~clguiEvent(){};
   clguiEventType GetType()const{ return m_type; };
-  UniformComponentVariable oldValue;
-  UniformComponentVariable newValue;
+  const clguiInteractive* GetSender()const{ return m_eventSender; }
 
 private:
   const clguiEventType m_type;
-  clbool m_bStopPropagation=false;
+  const clguiInteractive* m_eventSender;
+
 };
-}
+
+
+
+class clguiEventMouseClick final:public clguiEvent{
+public:
+  clguiEventMouseClick(const clguiInteractive* sender);
+  ~clguiEventMouseClick();
+};
+
+CLGUI_NAMESPACE_END

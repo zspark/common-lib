@@ -1,10 +1,25 @@
 #include "clgui.h"
+#include "clgui_gui_sets.h"
 
 using namespace std;
-using namespace clgui;
 
 static void errorCallback(int error,const char* description){
   //fprintf(stderr, "Error %d: %s\n", error, description);
+}
+
+static void cf(const clgui::clguiEvent* evt){
+  /*
+  clguiButton* btn=new clguiButton();
+  gui->AddToStage(btn);
+  */
+  //gui->RemoveFromStage(evt->GetSenderAs<clguiComponent*>(CLGUI_OBJECT_TYPE_COMPONENT));
+}
+static void CreateGUI(){
+  clgui::clguiButton* btn=new clgui::clguiButton();
+  btn->AddEventListener(clgui::clguiEventType::CLGUI_EVT_BUTTON_CLICK,cf);
+  clgui::clguiAddToStage(btn);
+  //btn->clguiSetSize(50,20);
+  //btn->Visible(false);
 }
 
 
@@ -24,15 +39,16 @@ int main(int argc,char* argv[]){
 
   GLenum err=glewInit();
   if(err!=GLEW_OK) exit(EXIT_FAILURE);
-  clGUI* gui=clGUI::GetIns();
-  gui->Init(wnd);
-  gui->SetGLClearColor(191,191,191);
+  clgui::clguiInit(wnd);
+  clgui::clguiSetStageColor(191,191,0);
+  CreateGUI();
 
   while(!glfwWindowShouldClose(wnd)){
     glfwPollEvents();
-    gui->Exec();
+    clgui::clguiExec();
+    glfwSwapBuffers(wnd);
   }
-  gui->Exit();
+  clgui::clguiExit();
   glfwTerminate();
 
   return EXIT_SUCCESS;

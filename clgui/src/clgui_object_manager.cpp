@@ -3,55 +3,116 @@
 
 using namespace std;
 
-namespace clgui{
+CLGUI_NAMESPACE_START
 
-class clguiStage:public clguiContainer{
-public:
-  clguiStage():clguiContainer(CLGUI_OBJECT_TYPE_STAGE){}
-  ~clguiStage(){}
-  void Render()override{};
-};
+typedef cl::hs::clHSNode_T<clguiObject*> node;
 
 clguiObjectManager* clguiObjectManager::sIns=nullptr;
-clguiObjectManager * clgui::clguiObjectManager::GetIns(){
-  if(sIns==nullptr)sIns=new clguiObjectManager();
+clguiObjectManager* clguiObjectManager::GetIns(){
+  if(!sIns){
+    sIns=new clguiObjectManager();
+    sIns->Init();
+  }
   return sIns;
 }
+void clguiObjectManager::DeleteIns(){
+  if(sIns)delete sIns;
+}
+
 clguiObjectManager::clguiObjectManager(){
-  node* m_rootNode=m_hs.CreateNode();
-  m_hs.InsertNode(nullptr,m_rootNode,cl::hs::clHSNodeRelation::R_FIRST_CHILD);
-  m_rootNode->customObject=new clguiStage();
 }
 clguiObjectManager::~clguiObjectManager(){
   //delete all clguiobjects;
-  clsize N{m_vecObjs.size()};
-  vector<clguiObject*> tmpvec;
-  tmpvec.reserve(N);
-  memcpy(&tmpvec[0],&m_vecObjs[0],N);
-  for(cluint i=0;i++;i<N){
-    delete tmpvec[i];
-  }
-  m_vecObjs.clear();
-  tmpvec.clear;
+}
 
-  //delete all nodes
-  m_hs.DeleteAllNodes();
+void clguiObjectManager::Init(){
+  clguiStage* stage=new clguiStage();
+  m_hs.InsertNode(nullptr,m_map_clguiObject_node[stage],cl::hs::clHSNodeRelation::R_FIRST_CHILD);
+}
+
+clguiStage * clguiObjectManager::GetStage(){
+  return TryConvertTo<clguiStage*>(m_hs.GetFirstChildNode()->customObject,CLGUI_OBJECT_TYPE_STAGE);
+}
+
+clguiObject * clguiObjectManager::GetNextSibling(clguiObject * obj) const noexcept{
+  node* nd=GetNodeByclguiObject_(obj);
+  if(nd){
+    if(nd->GetNextSiblingNode())return nd->GetNextSiblingNode()->customObject;
+  } 
+  return nullptr;
+}
+
+clguiObject * clguiObjectManager::GetFirstChild(clguiObject * obj) const noexcept{
+  node* nd=GetNodeByclguiObject_(obj);
+  if(nd){
+    if(nd->GetFirstChildNode())return nd->GetFirstChildNode()->customObject;
+  } 
+  return nullptr;
+}
+
+clguiObject * clguiObjectManager::GetParent(clguiObject * child) const noexcept{
+  node* cNode=GetNodeByclguiObject_(child); F_DBG_ASSERT(cNode);
+  return (cNode->GetParentNode())?cNode->GetParentNode()->customObject:nullptr;
+}
+
+clguiContainer * clguiObjectManager::ToclguiContainer(clguiObject * obj) const noexcept{
+  return TryConvertTo<clguiContainer*>(obj,CLGUI_OBJECT_TYPE_CONTAINER);
+}
+
+clguiComponent * clguiObjectManager::ToclguiComponent(clguiObject * obj) const noexcept{
+  return TryConvertTo<clguiComponent*>(obj,CLGUI_OBJECT_TYPE_COMPONENT);
+}
+
+clguiRenderable * clguiObjectManager::ToclguiRenderable(clguiObject * obj) const noexcept{
+  return TryConvertTo<clguiRenderable*>(obj,CLGUI_OBJECT_TYPE_RENDERABLE);
+}
+
+void clguiObjectManager::AddChildAt(clguiComponent * child,clguiContainer * parent,clint index){
+  node* cNode=GetNodeByclguiObject_(child); F_DBG_ASSERT(cNode);
+  node* pNode=GetNodeByclguiObject_(parent); F_DBG_ASSERT(pNode);
+
+  if(m_hs.IsNodeInHS(cNode)){
+    m_hs.RemoveNode(cNode);
+  }
+  cl::hs::clHSNodeRelation r;
+  if(index<0)r=cl::hs::clHSNodeRelation::R_LAST_CHILD;
+  else if(index==0)r=cl::hs::clHSNodeRelation::R_FIRST_CHILD;
+  else{
+    if(pNode->GetFirstChildNode()){
+      pNode=pNode->GetFirstChildNode();
+      pNode=m_hs.GetSiblingNodeByOffset(pNode,index-1);
+      r=cl::hs::clHSNodeRelation::R_NEXT_SIBLING;
+    } else{
+      r=cl::hs::clHSNodeRelation::R_FIRST_CHILD;
+    }
+  }
+  m_hs.InsertNode(pNode,cNode,r);
+}
+
+void clguiObjectManager::RemoveChild(clguiComponent * child){
+  node* cNode=GetNodeByclguiObject_(child); F_DBG_ASSERT(cNode);
+  m_hs.RemoveNode(cNode);
 }
 
 void clguiObjectManager::AddObject(clguiObject * obj){
-  m_vecObjs.push_back(obj);
+  node* nd=m_hs.CreateNode();
+  m_map_clguiObject_node[obj]=nd;
+  nd->customObject=obj;
 }
 
 void clguiObjectManager::RemoveObject(clguiObject * obj){
-  clsize N{m_vecObjs.size()};
-  for(cluint i=0;i++;i<N){
-    if(m_vecObjs[i]->GetUniqueID()==obj->GetUniqueID()){
-      m_vecObjs.erase(m_vecObjs.begin()+i);
-      return;
-    }
+  map<clguiObject*,node*>::const_iterator it=m_map_clguiObject_node.find(obj);
+  if(it!=m_map_clguiObject_node.end()){
+    m_hs.DeleteNode(it->second);
+    m_map_clguiObject_node.erase(it);
   }
 }
 
-
-
+inline node * clguiObjectManager::GetNodeByclguiObject_(clguiObject * obj) const noexcept{
+  map<clguiObject*,node*>::const_iterator it=m_map_clguiObject_node.find(obj);
+  return it==m_map_clguiObject_node.end()?nullptr:it->second;
 }
+
+
+
+CLGUI_NAMESPACE_END

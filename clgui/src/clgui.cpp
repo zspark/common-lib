@@ -4,52 +4,74 @@
 #include "clgui_object_manager.h"
 #include "clguiObject.h"
 
-namespace clgui{
-clGUI* clGUI::sIns=nullptr;
-clGUI * clGUI::GetIns(){
-  if(!sIns)sIns=new clGUI();
-  return sIns;
-}
-clGUI::~clGUI(){ };
-void clGUI::Init(GLFWwindow* wnd){
-  m_glfwWnd=wnd;
+class clguiRenderer{
+public:
+static void RenderConponent(clgui::clguiObjectManager& mgr,clgui::clguiObject* obj){
+  F_DBG_ASSERT(obj!=nullptr);
+  clgui::clguiComponent* com=mgr.ToclguiComponent(obj);
+  if(!com->Visible())return;
+  F_DBG_ASSERT(com);
+  com->PreRender();
+  com->Render();
+  com->PostRender();
+};
+
+static void RenderContainer(clgui::clguiObjectManager& mgr,clgui::clguiObject* obj){
+  F_DBG_ASSERT(obj!=nullptr);
+  clgui::clguiContainer* con=mgr.ToclguiContainer(obj); F_DBG_ASSERT(con);
+  if(!con->Visible())return;
+  con->PreRender();
+  con->Render();
+  obj=mgr.GetFirstChild(con);
+  while(obj){
+    if(mgr.ToclguiContainer(obj)){
+      //container;
+      RenderContainer(mgr,obj);
+    } else{
+      // none container;
+      RenderConponent(mgr,obj);
+    }
+    obj=mgr.GetNextSibling(obj);
+  }
+  con->PostRender();
+};
+};
+
+
+CLGUI_NAMESPACE_START
+
+void clguiInit(GLFWwindow* wnd){
+  clguiObjectManager* mgr=clguiObjectManager::GetIns();
+  mgr->GetStage()->SetGLFWwindow(wnd);
   ImGui_ImplGlfwGL3_Init(wnd,true);
 }
 
-void clGUI::SetGLClearColor(int r,int g,int b){
-  const float F=1.0f/255.0f;
-  m_clearColor.x=r*F;
-  m_clearColor.y=r*F;
-  m_clearColor.z=r*F;
-  m_clearColor.w=1.0f;
-}
-
-void clGUI::Exec(){
+void clguiExec(){
   ImGui_ImplGlfwGL3_NewFrame();
-
   clguiObjectManager* mgr=clguiObjectManager::GetIns();
-  clguiRenderable* robj=mgr->Triverse<clguiRenderable>(CLGUI_OBJECT_TYPE_RENDERABLE,true);
-  while(robj){
-
-    robj->PreRender();
-    robj->Render();
-    robj->PostRender();
-
-    robj=mgr->Triverse<clguiRenderable>(CLGUI_OBJECT_TYPE_RENDERABLE);
-  }
-
-  int display_w,display_h;
-  glfwGetFramebufferSize(m_glfwWnd,&display_w,&display_h);
-  glViewport(0,0,display_w,display_h);
-  glClearColor(m_clearColor.x,m_clearColor.y,m_clearColor.z,m_clearColor.w);
-  glClear(GL_COLOR_BUFFER_BIT);
+  clguiStage* stage=mgr->GetStage();
+  F_DBG_ASSERT(stage);
+  clguiRenderer::RenderContainer(*mgr,stage);
   ImGui::Render();
-  glfwSwapBuffers(m_glfwWnd);
-
 };
 
-void clGUI::Exit(){
-  m_glfwWnd=nullptr;
-};
-
+void clguiExit(){
+  clguiObjectManager::DeleteIns();
 }
+
+void clguiAddToStage(clguiComponent * com){
+  clguiObjectManager* mgr=clguiObjectManager::GetIns();
+  mgr->GetStage()->AddChild(com);
+}
+
+CLGUI_API void clguiRemoveFromStage(clguiComponent * com){
+  clguiObjectManager* mgr=clguiObjectManager::GetIns();
+  mgr->GetStage()->RemoveChild(com);
+}
+
+CLGUI_API void clguiSetStageColor(cluint r,cluint g,cluint b){
+  clguiObjectManager* mgr=clguiObjectManager::GetIns();
+  mgr->GetStage()->SetColor(r,g,b);
+}
+
+CLGUI_NAMESPACE_END

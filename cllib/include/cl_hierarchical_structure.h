@@ -10,6 +10,14 @@
 namespace cl{
 namespace hs{
 
+enum clHSInsertResult{
+  HS_INSERT_RESULT_SUCCESS=0,
+  HS_INSERT_RESULT_SAME_NODE,
+  HS_INSERT_RESULT_NO_OPERATION,
+  HS_INSERT_RESULT_DIFFERENT_KIND_OF_NODE,
+  HS_INSERT_RESULT_SOURCE_NODE_ALREADY_IN_HS,
+};
+
 enum clHSNodeRelation{
   R_NULL=0,
   R_NEXT_SIBLING,
@@ -21,8 +29,7 @@ enum clHSNodeRelation{
 template<typename T>
 class clHSNode_T{
 private:
-  clHSNode_T(cluint id):m_id(id){};
-
+  clHSNode_T(cluint ID,cluint HSID):m_ID(ID),m_HSID(HSID){};
   ~clHSNode_T(){
     m_pParentNode=nullptr;
     m_pPreSiblingNode=nullptr;
@@ -31,20 +38,21 @@ private:
   };
 
 public:
-  inline cluint GetId()const{ return m_id; }
+  inline cluint GetId()const{ return m_ID; }
   clHSNode_T* GetParentNode()const{ return m_pParentNode; }
   clHSNode_T* GetPreSiblingNode()const{ return m_pPreSiblingNode; }
   clHSNode_T* GetNextSiblingNode()const{ return m_pNextSiblingNode; }
   clHSNode_T* GetFirstChildNode()const{ return m_pFirstChildNode; }
 
-  //One cant change id of a exist node;void SetId(cluint id) { m_id=id; }
-  T* customObject=nullptr;
+  //One cant change id of a exist node;void SetId(cluint id) { m_ID=id; }
+  T customObject;
 
 private:
   template<typename,template<typename>class>friend class clHS_T;
   //template<T,template<typename>class> friend class clHS_T;
 
-  cluint m_id;//unique;
+  const cluint m_ID;//unique;
+  const cluint m_HSID;
   clHSNode_T* m_pParentNode=nullptr;
   clHSNode_T* m_pPreSiblingNode=nullptr;
   clHSNode_T* m_pNextSiblingNode=nullptr;
@@ -55,10 +63,13 @@ template<typename T,template<typename> class NODE=clHSNode_T>
 class clHS_T{
 private:
   NODE<T>* const m_pInvisibleUniqueRootNode;
-  std::vector<NODE<T>*> m_vecTraserseUseOnly;
+  NODE<T>* m_trNode;
+  const cluint m_ID;
 
 public:
-  clHS_T():m_pInvisibleUniqueRootNode(new NODE<T>(0)){};
+  clHS_T():m_pInvisibleUniqueRootNode(new NODE<T>(GetUniqueUint(),m_ID))
+    ,m_ID(GetUniqueUint()){
+  };
   ~clHS_T(){
     DeleteDecendantNodes_(m_pInvisibleUniqueRootNode);
     delete m_pInvisibleUniqueRootNode;
@@ -70,10 +81,7 @@ public:
   * because all nodes have their unique id which is controled by scene graph.
   */
   NODE<T>* CreateNode(){
-    NODE<T>* node=new NODE<T>(GetUniqueUint());
-    node->
-    NODE<clint> node2=new NODE<clint>(1);
-    node2->
+    NODE<T>* node=new NODE<T>(GetUniqueUint(),m_ID);
     return node;
   }
 
@@ -86,7 +94,7 @@ public:
     while(vec.size()!=0){
       tmpNode=vec.back();
       vec.pop_back();
-      if(tmpNode->m_id==id)break;
+      if(tmpNode->m_ID==id)break;
       else{
         if(tmpNode->m_pNextSiblingNode!=nullptr)
           vec.push_back(tmpNode->m_pNextSiblingNode);
@@ -98,12 +106,35 @@ public:
     return tmpNode;
   }
 
+  // returns node's sibling node by offset
+  // node should NOT be nullptr;
+  // if offset gets out of range, then returns it's parent's first or last node
+  // offset 0 means node itself;
+  NODE<T>* GetSiblingNodeByOffset(NODE<T>* node,clint offset){
+    if(offset==0)return node;
+    while(node){
+      if(offset>0){
+        if(node->m_pNextSiblingNode){
+          node=node->m_pNextSiblingNode;
+          offset--;
+        } else return node;
+      } else{
+        if(node->m_pPreSiblingNode){
+          node=node->m_pPreSiblingNode;
+          offset++;
+        } else return node;
+      }
+      if(offset==0)return node;
+    }
+    return nullptr;
+  }
+
   /**
   * return the last child node of the given node;
   * if node has no children then return nullptr;
   * and if node is nullptr, return invisibleRootNode's last child;
   */
-  NODE<T>* GetLastChildNode(NODE<T>* node){
+  NODE<T>* GetLastChildNode(NODE<T>* node=nullptr){
     if(!node)node=m_pInvisibleUniqueRootNode;
     NODE<T>* tmpNode=node->m_pFirstChildNode;
     if(!tmpNode)return nullptr;
@@ -128,21 +159,24 @@ public:
   * if not return nullptr;
   */
   NODE<T>* DeleteNode(cluint id){
-    NODE<T>* tmpNode=GetNode(id);
-    if(tmpNode==nullptr)return nullptr;
-    else{
-      NODE<T>* firstNode=tmpNode->m_pFirstChildNode;
-      ReconstructRelationWithout_(tmpNode);
-      delete tmpNode;
-      return firstNode;
-    }
+    NODE<T>* tmpNode=GetNodeById(id);
+    if(tmpNode){
+      return DeleteNode(tmpNode);
+    } else return nullptr;
+  }
+
+  NODE<T>* DeleteNode(NODE<T>* node){
+    NODE<T>* firstNode=node->m_pFirstChildNode;
+    ReconstructRelationWithout_(node);
+    delete node;
+    return firstNode;
   }
 
   //this will delete all nodes which have the same parent id.
   clbool DeleteDecendantNodes(cluint id){
-    NODE<T>* tmpNode=GetNode(id);
-    if(tmpNode==nullptr)return false;
-    return DeleteDecendantNodes_(tmpNode);
+    NODE<T>* tmpNode=GetNodeById(id);
+    if(tmpNode) return DeleteDecendantNodes_(tmpNode);
+    return false;
   }
 
   //just return the node which has given id;if not return nullptr;
@@ -150,103 +184,124 @@ public:
   // you can delete returned node by DeleteNode method;
   // or adding it back to graph.
   NODE<T>* RemoveNode(cluint id){
-    NODE<T>* tmpNode=GetNode(id);
-    if(tmpNode==nullptr)return nullptr;
-    else{
-      ReconstructRelationWithout_(tmpNode);
-      tmpNode->m_pNextSiblingNode=nullptr;
-      tmpNode->m_pParentNode=nullptr;
-      tmpNode->m_pPreSiblingNode=nullptr;
-    }
-    return tmpNode;
+    NODE<T>* tmpNode=GetNodeById(id);
+    if(tmpNode){
+      RemoveNode(tmpNode);
+      return tmpNode;
+    } else return nullptr;
+  }
+
+  void RemoveNode(NODE<T>* node){
+    ReconstructRelationWithout_(node);
+    node->m_pNextSiblingNode=nullptr;
+    node->m_pParentNode=nullptr;
+    node->m_pPreSiblingNode=nullptr;
   }
 
   //insert srcNode which has relation with targetNode to targetNode.
-  //if targetNode is nullptr,means rootnode. in this case,all relation is ignord. we will 
-  //add srcNode as root's child.
-  clbool InsertNode(NODE<T>* targetNode,NODE<T>* srcNode,clHSNodeRelation relation){
-    if(targetNode==srcNode)return false;
+  //if targetNode is nullptr,means invisibleRootNode. in this case,all relation is ignord. 
+  //we will add srcNode as root's child.
+  // targetNode(if not null) and srcNode MUST be created by this HS;
+  // srcNode should NOT be in HS;
+  clHSInsertResult InsertNode(NODE<T>* targetNode,NODE<T>* srcNode,clHSNodeRelation relation){
+    if(srcNode->m_HSID!=m_ID)return clHSInsertResult::HS_INSERT_RESULT_DIFFERENT_KIND_OF_NODE;
+    if(targetNode && targetNode->m_HSID!=m_ID)return clHSInsertResult::HS_INSERT_RESULT_DIFFERENT_KIND_OF_NODE;
+    if(targetNode==srcNode)return clHSInsertResult::HS_INSERT_RESULT_SAME_NODE;
+    if(IsNodeInHS(srcNode))return clHSInsertResult::HS_INSERT_RESULT_SOURCE_NODE_ALREADY_IN_HS;
+
     if(targetNode==nullptr){
-      NODE<T>* firstNode=m_pInvisibleUniqueRootNode->m_pFirstChildNode;
-      if(firstNode){
-        return InsertNode(firstNode,srcNode,clHSNodeRelation::R_NEXT_SIBLING);
+      NODE<T>* lastChild=GetLastChildNode();
+      if(lastChild){
+        return InsertNode(lastChild,srcNode,clHSNodeRelation::R_NEXT_SIBLING);
       } else{
         m_pInvisibleUniqueRootNode->m_pFirstChildNode=srcNode;
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
         // invisible node CAN NOT been seen;
+        // so to comment next line with second line;
         //srcNode->m_pParentNode=m_pInvisibleUniqueRootNode;
+        srcNode->m_pParentNode=nullptr;
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        return clHSInsertResult::HS_INSERT_RESULT_SUCCESS;
       }
-      return true;
     }
     switch(relation){
     case R_NEXT_SIBLING:
     {
       NODE<T>* nextNode=targetNode->m_pNextSiblingNode;
+      srcNode->m_pNextSiblingNode=nextNode;
+      if(nextNode) nextNode->m_pPreSiblingNode=srcNode;
       targetNode->m_pNextSiblingNode=srcNode;
       srcNode->m_pPreSiblingNode=targetNode;
-      srcNode->m_pNextSiblingNode=nextNode;
       srcNode->m_pParentNode=targetNode->m_pParentNode;
-      if(nextNode!=nullptr)
-        nextNode->m_pPreSiblingNode=srcNode;
     }
     break;
     case R_PRE_SIBLING:
     {
       NODE<T>* preNode=targetNode->m_pPreSiblingNode;
+      srcNode->m_pPreSiblingNode=preNode;
+      if(preNode) preNode->m_pNextSiblingNode=srcNode;
+      else targetNode->m_pParentNode->m_pFirstChildNode=srcNode;
       targetNode->m_pPreSiblingNode=srcNode;
       srcNode->m_pNextSiblingNode=targetNode;
-      srcNode->m_pPreSiblingNode=preNode;
       srcNode->m_pParentNode=targetNode->m_pParentNode;
-      if(preNode!=nullptr)
-        preNode->m_pPreSiblingNode=srcNode;
-      else targetNode->m_pParentNode->m_pFirstChildNode=srcNode;
     }
     break;
     case R_FIRST_CHILD:
     {
       NODE<T>* firstChildNode=targetNode->m_pFirstChildNode;
-      targetNode->m_pFirstChildNode=srcNode;
-      srcNode->m_pParentNode=targetNode;
-      if(firstChildNode!=nullptr){
+      if(firstChildNode){
         firstChildNode->m_pPreSiblingNode=srcNode;
         srcNode->m_pNextSiblingNode=firstChildNode;
       }
+      targetNode->m_pFirstChildNode=srcNode;
+      srcNode->m_pParentNode=targetNode;
     }
     break;
     case R_LAST_CHILD:
     {
       NODE<T>* lastChildNode=GetLastChildNode(targetNode);
-      if(lastChildNode==nullptr){
-        return InsertNode(targetNode,srcNode,clHSNodeRelation::R_FIRST_CHILD);
-      } else{
+      if(lastChildNode){
         srcNode->m_pParentNode=targetNode;
         lastChildNode->m_pNextSiblingNode=srcNode;
         srcNode->m_pPreSiblingNode=lastChildNode;
+      } else{
+        return InsertNode(targetNode,srcNode,clHSNodeRelation::R_FIRST_CHILD);
       }
 
     }
     break;
     case R_NULL:
     default:
-      return false;
+      return clHSInsertResult::HS_INSERT_RESULT_NO_OPERATION;
       break;
     }
-    return true;
+    return clHSInsertResult::HS_INSERT_RESULT_SUCCESS;
   }
 
   //return all children number of given node except it's decendant ;
-  cluint GetNumChildren(NODE<T>* node)const{
+  // if node==nullptr, means how many root nodes;
+  cluint GetNumChildren(NODE<T>* node=nullptr)const{
+    if(!node)node=m_pInvisibleUniqueRootNode;
     cluint sum=0;
     NODE<T>* tmpNode=node->m_pFirstChildNode;
-    while(tmpNode!=nullptr){
+    while(tmpNode){
       sum++;
       tmpNode=tmpNode->m_pNextSiblingNode;
     }
     return sum;
-
   }
-  //return all children number of root node except it's decendant.
-  cluint GetNumChildren()const{
-    return GetNumChildren(m_pInvisibleUniqueRootNode);
+
+  clbool IsNodeInHS(NODE<T>* node)const{
+    if(!node)return false;
+    while(node->m_pParentNode){
+      node=node->m_pParentNode;
+    }
+    NODE<T>* nd=m_pInvisibleUniqueRootNode->m_pFirstChildNode;
+    while(nd){
+      if(nd==node)return true;
+      nd=nd->m_pNextSiblingNode;
+    }
+    return false;
   }
 
   /**
@@ -258,30 +313,32 @@ public:
   }
   
   // traserse begin;
-  NODE<T>* TraverseBegin(){
-    if(m_pInvisibleUniqueRootNode->m_pFirstChildNode==nullptr)return nullptr;
-    m_vecTraserseUseOnly.clear();
-    NODE<T>* tmpNode=m_pInvisibleUniqueRootNode->m_pFirstChildNode;
-    if(tmpNode->m_pNextSiblingNode!=nullptr)
-      m_vecTraserseUseOnly.push_back(tmpNode->m_pNextSiblingNode);
-    if(tmpNode->m_pFirstChildNode!=nullptr)
-      m_vecTraserseUseOnly.push_back(tmpNode->m_pFirstChildNode);
-    return tmpNode;
-  }
-
-  // traserse continue;
-  // if return value is nullptr ,means over;
-  NODE<T>* TraverContinue(){
-    NODE<T>* tmpNode=nullptr;
-    if(m_vecTraserseUseOnly.size()!=0){
-      tmpNode=m_vecTraserseUseOnly.back();
-      m_vecTraserseUseOnly.pop_back();
-      if(tmpNode->m_pNextSiblingNode!=nullptr)
-        m_vecTraserseUseOnly.push_back(tmpNode->m_pNextSiblingNode);
-      if(tmpNode->m_pFirstChildNode!=nullptr)
-        m_vecTraserseUseOnly.push_back(tmpNode->m_pFirstChildNode);
+  NODE<T>* Traverse(clbool begin=false){
+    if(begin){
+      m_trNode=m_pInvisibleUniqueRootNode->m_pFirstChildNode;
+      return m_trNode;
+    } else{
+      if(m_trNode){
+        if(m_trNode->m_pFirstChildNode){
+          m_trNode=m_trNode->m_pFirstChildNode;
+          return m_trNode;
+        } else if(m_trNode->m_pNextSiblingNode){
+          m_trNode=m_trNode->m_pNextSiblingNode;
+          return m_trNode;
+        } else{
+          m_trNode=m_trNode->m_pParentNode;
+          while(m_trNode){
+            if(m_trNode->m_pNextSiblingNode){
+              m_trNode=m_trNode->m_pNextSiblingNode;
+              return m_trNode;
+            } else{
+              m_trNode=m_trNode->m_pParentNode;
+            }
+          };
+          return nullptr;
+        }
+      } else return nullptr;
     }
-    return tmpNode;
   }
 
   //print graph info;
@@ -304,12 +361,11 @@ public:
         vec.push_back(tmpNode->m_pFirstChildNode);
 
       cluint w=(GetDepth_(tmpNode))*perDepthWidth;
-      std::cout<<setiosflags(ios::left)<<setw(w)<<""<<"id="<<tmpNode->m_id<<std::endl;
+      std::cout<<setiosflags(ios::left)<<setw(w)<<""<<"id="<<tmpNode->m_ID<<std::endl;
     }
     return;
 #endif
   }
-
 
 private:
   void ReconstructRelationWithout_(NODE<T>* node){
@@ -319,12 +375,10 @@ private:
 
     if(parentNode->m_pFirstChildNode==node){
       parentNode->m_pFirstChildNode=nextNode;
-      if(nextNode!=nullptr)
-        nextNode->m_pPreSiblingNode=nullptr;
+      if(nextNode) nextNode->m_pPreSiblingNode=nullptr;
     } else{
       preNode->m_pNextSiblingNode=nextNode;
-      if(nextNode!=nullptr)
-        nextNode->m_pPreSiblingNode=preNode;
+      if(nextNode) nextNode->m_pPreSiblingNode=preNode;
     }
   }
 
@@ -343,7 +397,7 @@ private:
 
   //return parent node if node is it's first child;
   //else return nullptr;
-  NODE<T>* IsNodeFirstChild_(NODE<T>* node){
+  NODE<T>* Im_trNodeFirstChild_(NODE<T>* node){
     if(node==node->m_pParentNode->m_pFirstChildNode)
       return node->m_pParentNode==m_pInvisibleUniqueRootNode?nullptr:node->m_pParentNode;
     else return nullptr;

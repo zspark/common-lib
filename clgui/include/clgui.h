@@ -2,28 +2,18 @@
 #include <GL\glew.h>
 #include "GLFW\glfw3.h"
 #include "cl_types.h"
+#include "clgui_macro.h"
 
-namespace clgui{
+CLGUI_NAMESPACE_START
 
-class clGUI{
-public:
-  static clGUI* GetIns();
-public:
-  void SetGLClearColor(int r,int g,int b);
-  void Init(GLFWwindow* wnd);
-  void Exec();
-  void Exit();
+class clguiComponent;
 
-private:
-  clGUI(){};
-  clGUI(const clGUI&)=delete;
-  ~clGUI();
+CLGUI_API void clguiInit(GLFWwindow* wnd);
+CLGUI_API void clguiExec();
+CLGUI_API void clguiExit();
+CLGUI_API void clguiAddToStage(clguiComponent* com);
+CLGUI_API void clguiRemoveFromStage(clguiComponent* com);
+CLGUI_API void clguiSetStageColor(cluint r,cluint g,cluint b);
 
-private:
-  static clGUI* sIns;
-  GLFWwindow* m_glfwWnd;
-  cl::clF4 m_clearColor;
+CLGUI_NAMESPACE_END
 
-};
-
-}

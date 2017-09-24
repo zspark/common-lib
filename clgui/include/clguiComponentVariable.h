@@ -1,11 +1,13 @@
 #pragma once
 #include <functional>
 #include "cl_types.h"
+#include "clgui_macro.h"
 
-namespace clgui{
+using namespace cl;
+
+CLGUI_NAMESPACE_START
 
 class clguiEvent;
-using namespace cl;
 
 template<typename T>
 class ComponentVariable_T{
@@ -62,37 +64,4 @@ enum UniformComponentVariableType{
   UCV_DOUBLE3,
 };
 
-struct UniformComponentVariable{
-  UniformComponentVariable(){};
-  ~UniformComponentVariable(){};
-
-  bool CheckChange(){
-    return intValue.CheckChange();
-  }
-
-  void Update(){
-    intValue.Update();
-  }
-
-  UniformComponentVariableType type;
-  union{
-    cvInt intValue;
-    cvUint uintValue;
-    cvFloat floatValue;
-    cvDouble doubleValue;
-    cvBool boolValue;
-
-    cvFloat3 float3Value;
-    cvInt3 int3Value;
-    cvUint3 uint3Value;
-    cvDouble3 double3Value;
-  };
-};
-
-
-typedef std::function<void()> CallBackFn;
-typedef std::function<void(bool)> CallBackBoolFn;
-//typedef std::function<void(clguiEvent)>CallBackEventFn;
-typedef void CallBackEventFn(clguiEvent);
-
-}
+CLGUI_NAMESPACE_END

@@ -1,23 +1,24 @@
 #pragma once
 #include <map>
 #include <vector>
+#include "imgui_impl_glfw_gl3.h"
 #include "cl_types.h"
 #include "cl_hierarchical_structure.h"
+#include "clgui_macro.h"
 #include "clguiEvent.h"
 #include "clguiComponentVariable.h"
 
-namespace clgui{
 using namespace cl;
-class clguiObject;
-typedef cl::hs::clHSNode_T<clguiObject*> node;
+class clguiRenderer;
+
+CLGUI_NAMESPACE_START
 
 #define CLGUI_OBJECT_TYPE_OBJECT 1
 #define CLGUI_OBJECT_TYPE_RENDERABLE ((1<<1)|CLGUI_OBJECT_TYPE_OBJECT)
-#define CLGUI_OBJECT_TYPE_INTERACTIVE ((1<<2)|CLGUI_OBJECT_TYPE_RENDERABLE)
-#define CLGUI_OBJECT_TYPE_CONTAINER ((1<<3)|CLGUI_OBJECT_TYPE_INTERACTIVE)
-#define CLGUI_OBJECT_TYPE_STAGE 0xFF000000
+#define CLGUI_OBJECT_TYPE_COMPONENT ((1<<2)|CLGUI_OBJECT_TYPE_RENDERABLE)
+#define CLGUI_OBJECT_TYPE_CONTAINER ((1<<3)|CLGUI_OBJECT_TYPE_COMPONENT)
+#define CLGUI_OBJECT_TYPE_STAGE (1<7|CLGUI_OBJECT_TYPE_CONTAINER)
 /*
-#define CLGUI_OBJECT_TYPE_BUTTON
 #define CLGUI_OBJECT_TYPE_SLIDER
 #define CLGUI_OBJECT_TYPE_LABEL
 #define CLGUI_OBJECT_TYPE_CHECKBOX
@@ -28,7 +29,17 @@ typedef cl::hs::clHSNode_T<clguiObject*> node;
 #define CLGUI_OBJECT_TYPE_NULL
 */
 
-class clguiObject{
+
+class clguiObject;
+class clguiContainer;
+class clguiObjectManager;
+
+template<typename T>
+CLGUI_API inline T TryConvertTo(clguiObject* obj,cluint type)noexcept{
+  return ((obj->GetType()&type)==type)?static_cast<T>(obj):nullptr;
+}
+
+CLGUI_API class clguiObject{
 public:
   clguiObject(cluint type);
   virtual ~clguiObject();
@@ -39,30 +50,33 @@ public:
   inline cluint GetType()const{ return m_type; };
   inline cluint GetUniqueID()const{ return m_uUniqueID; };
 
-protected:
+private:
   const cluint m_type;
   const cluint m_uUniqueID;
-  node* m_node=nullptr;
 };
 
 
 
 
 
-
-class clguiRenderable:public clguiObject{
+CLGUI_API class clguiRenderable:public clguiObject{
 public:
   clguiRenderable(cluint type):clguiObject(type){};
   virtual ~clguiRenderable(){};
 
-  virtual void Init(){};
+protected:
+  friend class clguiRenderer;
+
   virtual void PreRender(){};
   virtual void Render()=0;
   virtual void PostRender(){};
-  virtual void Destroy(){};
 };
 
-class clguiInteractive:public clguiRenderable{
+
+
+
+
+CLGUI_API class clguiInteractive:public clguiRenderable{
 public:
   clguiInteractive(cluint type):clguiRenderable(type){};
   virtual ~clguiInteractive();
@@ -71,22 +85,59 @@ public:
   void AddEventListener(clguiEventType eventName,CallBackEventFn* cbFn);
 
 protected:
-  void DispatchEvent_(clguiEventType type,clguiEvent);
+  void DispatchEvent_(const clguiEvent*);
 
 private:
   std::map<clguiEventType,std::vector<CallBackEventFn*>> m_mapListeners_name_listener;
 
 };
 
-class clguiContainer:public clguiInteractive{
+CLGUI_API class clguiComponent:public clguiInteractive{
+public:
+  clguiComponent(cluint type):clguiInteractive(type){};
+  virtual ~clguiComponent(){};
+
+  inline void Visible(clbool b){ m_visible=b; }
+  inline clbool Visible()const{ return m_visible; }
+  clguiContainer* GetParent();
+
+protected:
+  clbool m_visible=true;
+
+};
+
+
+
+CLGUI_API class clguiContainer:public clguiComponent{
 public:
   clguiContainer(cluint type);
   virtual ~clguiContainer();
 
-  void AddChild(clguiRenderable*);
-  void RemoveChild(clguiRenderable*);
+  void AddChild(clguiComponent*);
+  void AddChildAt(clguiComponent*,clint index);
+  void RemoveChild(clguiComponent*);
 
   //virtual bool BuildLayoutComponentsByJson(Json::Value);
 private:
 };
-}
+
+
+
+CLGUI_API class clguiStage final:public clguiContainer{
+public:
+  clguiStage():clguiContainer(CLGUI_OBJECT_TYPE_STAGE){}
+  ~clguiStage(){ m_glfwWnd=nullptr; }
+
+public:
+  void SetColor(cluint r,cluint g,cluint b);
+  void SetGLFWwindow(GLFWwindow* wnd);
+
+protected:
+  void Render()override;
+
+private:
+  clF4 m_clearColor;
+  GLFWwindow* m_glfwWnd=nullptr;
+};
+
+CLGUI_NAMESPACE_END
