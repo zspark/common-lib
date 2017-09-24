@@ -1,5 +1,5 @@
-#include "clgui_object_manager.h"
-#include "clguiObject.h"
+#include "core/clgui_object_manager.h"
+#include "core/clguiObject.h"
 
 using namespace std;
 

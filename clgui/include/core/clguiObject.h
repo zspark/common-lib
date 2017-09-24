@@ -1,13 +1,13 @@
 #pragma once
 #include <map>
 #include <vector>
-#include "imgui.h"
-#include "imgui_impl_glfw_gl3.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw_gl3.h"
 #include "cl_types.h"
 #include "cl_hierarchical_structure.h"
 #include "clgui_macro.h"
+#include "clgui_variable.h"
 #include "clguiEvent.h"
-#include "clguiComponentVariable.h"
 
 using namespace cl;
 class clguiRenderer;

@@ -1,8 +1,8 @@
 #pragma once
-#include "clguiObject.h"
+#include "core/clguiObject.h"
 #include "GLFW\glfw3.h"
+#include "core/clgui_object_manager.h"
 #include "clguiEvent.h"
-#include "clgui_object_manager.h"
 
 using namespace std;
 using namespace cl;

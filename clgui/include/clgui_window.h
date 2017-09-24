@@ -1,7 +1,7 @@
 #pragma once
-#include "clgui_macro.h"
-#include "clguiComponentVariable.h"
-#include "clguiObject.h"
+#include "core/clgui_macro.h"
+#include "core/clgui_variable.h"
+#include "core/clguiObject.h"
 
 CLGUI_NAMESPACE_START
 

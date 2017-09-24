@@ -1,5 +1,5 @@
 #pragma once
-#include "clguiComponentVariable.h"
+#include "core\clgui_variable.h"
 
 CLGUI_NAMESPACE_START
 

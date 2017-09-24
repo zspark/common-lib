@@ -1,7 +1,7 @@
 #pragma once
 #include "GLFW\glfw3.h"
 #include "cl_types.h"
-#include "clgui_macro.h"
+#include "core/clgui_macro.h"
 
 CLGUI_NAMESPACE_START
 

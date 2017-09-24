@@ -1,5 +1,5 @@
 #include "clgui_button.h"
-#include "clguiObject.h"
+#include "core/clguiObject.h"
 
 CLGUI_NAMESPACE_START
 

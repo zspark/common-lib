@@ -1,9 +1,9 @@
 #pragma once
 
-#include "imgui.h"
-#include "clgui_macro.h"
-#include "clguiComponentVariable.h";
-#include "clguiObject.h"
+#include "imgui/imgui.h"
+#include "core/clgui_macro.h"
+#include "core\clgui_variable.h"
+#include "core/clguiObject.h"
 
 CLGUI_NAMESPACE_START
 
