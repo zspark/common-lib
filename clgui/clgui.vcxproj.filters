@@ -60,6 +60,9 @@
     <ClInclude Include="include\clgui_button.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\clgui_window.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\imgui\imgui.cpp">
@@ -84,6 +87,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\clgui_button.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clgui_window.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

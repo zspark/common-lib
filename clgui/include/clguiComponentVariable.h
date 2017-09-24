@@ -25,6 +25,7 @@ public:
   T GetOldValue()const{ return m_oldValue; };
   T GetNewValue()const{ return m_newValue; };
   T& GetNewValueRef(){ return m_newValue; };
+  T* GetNewValuePointer(){ return &m_newValue; };
 
   //only set new to value;
   void SetNewValue(T value){ m_newValue=value; }

@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <vector>
+#include "imgui.h"
 #include "imgui_impl_glfw_gl3.h"
 #include "cl_types.h"
 #include "cl_hierarchical_structure.h"
@@ -94,15 +95,22 @@ private:
 
 CLGUI_API class clguiComponent:public clguiInteractive{
 public:
-  clguiComponent(cluint type):clguiInteractive(type){};
+  clguiComponent(cluint type):clguiInteractive(type){
+    m_pos.x=0.f;m_pos.y=0.f;
+    m_size.x=m_size.y=100;
+  };
   virtual ~clguiComponent(){};
 
   inline void Visible(clbool b){ m_visible=b; }
   inline clbool Visible()const{ return m_visible; }
   clguiContainer* GetParent();
+  void SetSize(cluint width,cluint height);
+  void SetPosition(clint x,clint y);
 
 protected:
   clbool m_visible=true;
+  ImVec2 m_pos;
+  ImVec2 m_size;
 
 };
 

@@ -70,6 +70,16 @@ clguiContainer * clguiComponent::GetParent() {
   return TryConvertTo<clguiContainer*>(obj,CLGUI_OBJECT_TYPE_CONTAINER);
 }
 
+void clguiComponent::SetSize(cluint width,cluint height){
+  m_size.x=width;
+  m_size.y=height;
+}
+
+void clguiComponent::SetPosition(clint x,clint y){
+  m_pos.x=x;
+  m_pos.y=y;
+}
+
 
 void clguiStage::SetColor(cluint r,cluint g,cluint b){
   m_clearColor.x=r*M_1_255;

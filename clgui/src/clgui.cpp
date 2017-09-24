@@ -43,11 +43,11 @@ CLGUI_NAMESPACE_START
 void clguiInit(GLFWwindow* wnd){
   clguiObjectManager* mgr=clguiObjectManager::GetIns();
   mgr->GetStage()->SetGLFWwindow(wnd);
-  ImGui_ImplGlfwGL3_Init(wnd,true);
+  ImGui_ImplGlfw_Init(wnd,true);
 }
 
 void clguiExec(){
-  ImGui_ImplGlfwGL3_NewFrame();
+  ImGui_ImplGlfw_NewFrame();
   clguiObjectManager* mgr=clguiObjectManager::GetIns();
   clguiStage* stage=mgr->GetStage();
   F_DBG_ASSERT(stage);

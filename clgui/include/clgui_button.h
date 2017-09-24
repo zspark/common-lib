@@ -9,7 +9,8 @@ CLGUI_NAMESPACE_START
 
 class clguiComponent;
 
-CLGUI_API class clguiButton:public clguiComponent{
+CLGUI_API
+class clguiButton:public clguiComponent{
 public:
   clguiButton();
   clguiButton(const clguiButton& btn);
@@ -17,7 +18,6 @@ public:
 
 public:
   void SetCaption(clstr caption);
-  void SetSize(cluint width,cluint height);
 
 protected:
   void Render()override;
@@ -26,7 +26,6 @@ protected:
 private:
   cvBool m_cv;
   clstr m_caption="BUTTON";
-  ImVec2 m_size;
 };
 
 CLGUI_NAMESPACE_END

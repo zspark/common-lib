@@ -15,9 +15,16 @@ static void cf(const clgui::clguiEvent* evt){
   //gui->RemoveFromStage(evt->GetSenderAs<clguiComponent*>(CLGUI_OBJECT_TYPE_COMPONENT));
 }
 static void CreateGUI(){
+  clgui::clguiWindow* wnd=new clgui::clguiWindow();
+  wnd->SetCaption("Hello windows");
+  wnd->SetPosition(100,100);
+  wnd->SetSize(400,300);
+  clgui::clguiAddToStage(wnd);
+
+
   clgui::clguiButton* btn=new clgui::clguiButton();
   btn->AddEventListener(clgui::clguiEventType::CLGUI_EVT_BUTTON_CLICK,cf);
-  clgui::clguiAddToStage(btn);
+  wnd->AddChild(btn);
   //btn->clguiSetSize(50,20);
   //btn->Visible(false);
 }
@@ -34,11 +41,9 @@ int main(int argc,char* argv[]){
   char* title="Hello clgui!";
   GLFWwindow* wnd=glfwCreateWindow(size[0],size[1],title,NULL,NULL);
   glfwMakeContextCurrent(wnd);
-  glfwSwapInterval(1);
+  //glfwSwapInterval(1);
   glfwSetWindowPos(wnd,400,200);
 
-  GLenum err=glewInit();
-  if(err!=GLEW_OK) exit(EXIT_FAILURE);
   clgui::clguiInit(wnd);
   clgui::clguiSetStageColor(191,191,0);
   CreateGUI();

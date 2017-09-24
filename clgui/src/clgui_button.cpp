@@ -36,9 +36,4 @@ void clgui::clguiButton::SetCaption(clstr caption){
   m_caption=caption;
 }
 
-void clguiButton::SetSize(cluint width,cluint height){
-  m_size.x=width;
-  m_size.y=height;
-}
-
 CLGUI_NAMESPACE_END
