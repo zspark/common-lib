@@ -15,52 +15,76 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\clgui.h">
+    <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\clguiEvent.h">
+    <ClInclude Include="src\core\clgui_object_manager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\clgui_gui_sets.h">
+    <ClInclude Include="src\imgui\imconfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\clgui_button.h">
+    <ClInclude Include="src\imgui\imgui.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\clgui_window.h">
+    <ClInclude Include="src\imgui\imgui_impl_glfw_gl3.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\clgui_macro.h">
+    <ClInclude Include="src\imgui\imgui_internal.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\clgui_object_manager.h">
+    <ClInclude Include="src\imgui\stb_rect_pack.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\clguiObject.h">
+    <ClInclude Include="src\imgui\stb_textedit.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\imgui\imconfig.h">
+    <ClInclude Include="src\imgui\stb_truetype.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\imgui\imgui.h">
+    <ClInclude Include="include\clgui\clgui.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\imgui\imgui_impl_glfw_gl3.h">
+    <ClInclude Include="include\clgui\clgui_button.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\imgui\imgui_internal.h">
+    <ClInclude Include="include\clgui\clgui_checkbox.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\imgui\stb_rect_pack.h">
+    <ClInclude Include="include\clgui\clgui_gui_sets.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\imgui\stb_textedit.h">
+    <ClInclude Include="include\clgui\clgui_label.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\imgui\stb_truetype.h">
+    <ClInclude Include="include\clgui\clgui_menu.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\clgui_variable.h">
+    <ClInclude Include="include\clgui\clgui_menu_bar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\clgui_menu_item.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\clgui_slider.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\clgui_window.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\core\clgui_variable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\core\clgui_macro.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\core\clgui_object.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\core\clgui_event.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\clgui_textarea.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,16 +95,10 @@
     <ClCompile Include="src\imgui\imgui_draw.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui\imgui_impl_glfw_gl3.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\clgui_button.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\clgui_window.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\clguiObject.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\core\clgui_object_manager.cpp">
@@ -89,8 +107,31 @@
     <ClCompile Include="src\core\clgui.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\clguiEvent.cpp">
+    <ClCompile Include="src\imgui\imgui_impl_glfw_gl3.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\clgui_object.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clgui_checkbox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clgui_label.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clgui_menu_xxx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clgui_slider.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clgui_textarea.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="clgui.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

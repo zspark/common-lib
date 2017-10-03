@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <iostream>
-#include "cl_hierarchical_structure.h"
+#define __CLHS_DEBUG__
+#include "cl/cl_hierarchical_structure.h"
 
 using namespace std;
 using namespace cl;
@@ -41,7 +42,7 @@ int main(){
   hs.Print();
   //system("pause");
   cout<<"======================"<<endl;
-  node=hs.Traverse(true);
+  node=hs.Traverse(nullptr,true);
   while(node){
     cout<<node->GetId()<<endl;
     node=hs.Traverse();

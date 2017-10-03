@@ -1,5 +1,6 @@
 #include <Windows.h>
-#include "cl_console.h"
+#define CL_API_IMPORTS
+#include "cl/cl_console.h"
 
 using namespace std;
 using namespace cl;
@@ -11,7 +12,7 @@ int main(){
   pcons->Text("Hello World!");
 
 
-#if 0
+#if 1
   //pcons->ResetColor(clcon::ConForeColor::RED,clcon::ConBackColor::YELLOW);
   pcons->UpdateLastNChars("Hello",3);
   pcons->NewLine();
@@ -52,7 +53,7 @@ int main(){
   */
 #endif
 
-#if 1
+#if 0
   for(clint i=0;i<10000;i++){
     pcons->Text("aa");
     Sleep(50);

@@ -1,4 +1,4 @@
-#include "cl_console.h"
+#include "cl/cl_console.h"
 #include <iostream>
 
 using namespace std;
@@ -40,7 +40,7 @@ void sCleanCurrentLineBeheadCursor(){
 
 
 
-namespace cl{
+CL_NAMESPACE_START
 
 static clConsole* s_ins=nullptr;
 
@@ -183,4 +183,4 @@ clConsole::~clConsole(){
   SetConsoleTextAttribute(s_handler,m_originColor);
 }
 
-}
+CL_NAMESPACE_END

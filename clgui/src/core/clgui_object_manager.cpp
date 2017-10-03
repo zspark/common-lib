@@ -1,9 +1,18 @@
-#include "core/clgui_object_manager.h"
-#include "core/clguiObject.h"
+#include "clgui_object_manager.h"
+#include "clgui/core/clgui_object.h"
+#include "clgui/clgui_menu_bar.h"
+#include "clgui/clgui_menu.h"
+#include "clgui/clgui_menu_item.h"
 
 using namespace std;
 
 CLGUI_NAMESPACE_START
+
+template<typename T>
+inline T TryConvertTo(clguiObject* obj,cluint type)noexcept{
+  return ((obj->GetType()&type)==type)?static_cast<T>(obj):nullptr;
+}
+
 
 typedef cl::hs::clHSNode_T<clguiObject*> node;
 
@@ -11,7 +20,6 @@ clguiObjectManager* clguiObjectManager::sIns=nullptr;
 clguiObjectManager* clguiObjectManager::GetIns(){
   if(!sIns){
     sIns=new clguiObjectManager();
-    sIns->Init();
   }
   return sIns;
 }
@@ -55,16 +63,44 @@ clguiObject * clguiObjectManager::GetParent(clguiObject * child) const noexcept{
   return (cNode->GetParentNode())?cNode->GetParentNode()->customObject:nullptr;
 }
 
-clguiContainer * clguiObjectManager::ToclguiContainer(clguiObject * obj) const noexcept{
+/*
+cluint clguiObjectManager::GetMenubarHeight() noexcept{
+  clguiMenuBar* mb=nullptr;
+  mb=Traverse<clguiMenuBar>(CLGUI_OBJECT_TYPE_MENUBAR,true);
+  while(mb){
+    return 20;
+  }
+  return 0;
+}
+*/
+
+void clguiObjectManager::GetAllDecendant(clguiObject * parent,vector<clguiObject*>& out) noexcept{
+  node* nd=GetNodeByclguiObject_(parent); F_DBG_ASSERT(nd);
+  m_hs.GetDecendantCustom(nd,out);
+}
+
+clguiContainer * clguiObjectManager::ToContainer(clguiObject * obj) noexcept{
   return TryConvertTo<clguiContainer*>(obj,CLGUI_OBJECT_TYPE_CONTAINER);
 }
 
-clguiComponent * clguiObjectManager::ToclguiComponent(clguiObject * obj) const noexcept{
+clguiComponent * clguiObjectManager::ToComponent(clguiObject * obj) noexcept{
   return TryConvertTo<clguiComponent*>(obj,CLGUI_OBJECT_TYPE_COMPONENT);
 }
 
-clguiRenderable * clguiObjectManager::ToclguiRenderable(clguiObject * obj) const noexcept{
+clguiRenderable * clguiObjectManager::ToRenderable(clguiObject * obj) noexcept{
   return TryConvertTo<clguiRenderable*>(obj,CLGUI_OBJECT_TYPE_RENDERABLE);
+}
+
+clguiMenuBar * clguiObjectManager::ToMenubar(clguiObject * obj) noexcept{
+  return TryConvertTo<clguiMenuBar*>(obj,CLGUI_OBJECT_TYPE_MENUBAR);
+}
+
+clguiMenu * clguiObjectManager::ToMenu(clguiObject * obj) noexcept{
+  return TryConvertTo<clguiMenu*>(obj,CLGUI_OBJECT_TYPE_MENU);
+}
+
+clguiMenuItem * clguiObjectManager::ToMenuItem(clguiObject * obj) noexcept{
+  return TryConvertTo<clguiMenuItem*>(obj,CLGUI_OBJECT_TYPE_MENU_ITEM);
 }
 
 void clguiObjectManager::AddChildAt(clguiComponent * child,clguiContainer * parent,clint index){
@@ -100,11 +136,12 @@ void clguiObjectManager::AddObject(clguiObject * obj){
   nd->customObject=obj;
 }
 
-void clguiObjectManager::RemoveObject(clguiObject * obj){
+void clguiObjectManager::DeleteObject(clguiObject * obj){
   map<clguiObject*,node*>::const_iterator it=m_map_clguiObject_node.find(obj);
   if(it!=m_map_clguiObject_node.end()){
     m_hs.DeleteNode(it->second);
     m_map_clguiObject_node.erase(it);
+    delete obj;
   }
 }
 

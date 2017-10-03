@@ -10,7 +10,8 @@
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 // https://github.com/ocornut/imgui
 
-#include <imgui.h>
+#include "imgui.h"
+#define GLFW_DLL
 #include "imgui_impl_glfw_gl3.h"
 
 // GLFW
@@ -265,4 +266,14 @@ void ImGui_ImplGlfw_NewFrame(){
 
   // Start the frame
   ImGui::NewFrame();
+}
+
+IMGUI_API void ImGui_ImplGlfw_UpdateWindowSize(){
+  ImGuiIO& io=ImGui::GetIO();
+  int w,h;
+  int display_w,display_h;
+  glfwGetWindowSize(g_Window,&w,&h);
+  glfwGetFramebufferSize(g_Window,&display_w,&display_h);
+  io.DisplaySize=ImVec2((float)w,(float)h);
+  io.DisplayFramebufferScale=ImVec2(w > 0?((float)display_w/w):0,h > 0?((float)display_h/h):0);
 }

@@ -1,19 +1,17 @@
-#include "clgui_button.h"
-#include "core/clguiObject.h"
+#include "clgui/clgui_button.h"
+#include "imgui\imgui.h"
 
 CLGUI_NAMESPACE_START
 
 clguiButton::clguiButton()
-  :clguiComponent(CLGUI_OBJECT_TYPE_COMPONENT){
-  m_size.x=100;
-  m_size.y=50;
-  m_cv.ResetTo(false);
-}
+  :clguiComponent(CLGUI_OBJECT_TYPE_COMPONENT)
+  ,m_cv(false){ }
 
 clguiButton::clguiButton(const clguiButton & btn)
 :clguiButton(){
   m_size.x=btn.m_size.x;
   m_size.y=btn.m_size.y;
+  m_caption=btn.m_caption;
 }
 
 clguiButton::~clguiButton(){}
@@ -26,14 +24,10 @@ void clguiButton::Render(){
 
 void clguiButton::PostRender(){
   if(m_cv.CheckChange()){
-    clguiEventMouseClick evt(this);
+    clguiEventButtonClick evt(this,clguiEventType::EVT_BUTTON_CLICK);
     DispatchEvent_(&evt);
     m_cv.SetNewValue(false);
   }
-}
-
-void clgui::clguiButton::SetCaption(clstr caption){
-  m_caption=caption;
 }
 
 CLGUI_NAMESPACE_END

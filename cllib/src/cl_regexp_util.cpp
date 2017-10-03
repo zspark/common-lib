@@ -1,9 +1,9 @@
 #include <regex>
-#include "cl_regexp_util.h"
+#include "cl/cl_regexp_util.h"
 
 using namespace std;
 
-namespace cl{
+CL_NAMESPACE_START
 namespace clRegexp{
 
 clstr GetFirstMatch(clstr str,T_REGEXP_STRING format,vector<clstr>& out,clbool caseSensitive){
@@ -123,4 +123,4 @@ clbool GetIndices(clstr str,T_REGEXP_STRING format,vector<cluint>& out){
 
 
 }
-}
+CL_NAMESPACE_END

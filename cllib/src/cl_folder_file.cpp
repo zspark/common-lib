@@ -1,53 +1,32 @@
-#include "cl_folder_file.h"
+#include "cl/cl_folder_file.h"
 #include <stdio.h>
 #include <regex>
 #include <corecrt_io.h>
-#include "core\dirent.h"
-#include "core\cl_lib_compile.h"
-#include "cl_type_util.h"
-#include "cl_regexp_util.h"
+#include "dirent.h"
+#include "cl/cl_misc.h"
+#include "cl/cl_regexp_util.h"
 
-namespace cl{
+CL_NAMESPACE_START
 
+namespace clFF{
 
-void Release_(const FolderAndFile::FFInfo* rootInfo){
-  const FolderAndFile::FFInfo* next;
-  while(rootInfo){
-    next=rootInfo->next;
-    delete rootInfo;
-    rootInfo=next;
-  }
-}
-
-
-inline FolderAndFile::FFInfo* CreateNewFFInfo_(FolderAndFile::FFInfo* old,clint& n){
-  FolderAndFile::FFInfo* info=new FolderAndFile::FFInfo();
-  old->next=info;
-  n++;
-  return info;
-}
-
-FolderAndFile::FolderAndFile(){}
-FolderAndFile::~FolderAndFile(){
-  Release_(m_root);
-}
-
-cFFInfo* FolderAndFile::Traverse(clstr rootPath,cluint flag,clint* count){
-  Release_(m_root);
+CL_API const FFInfo * Traverse(clstr rootPath,FFFlag flag,clint * count){
   DIR *pDIR;
-  struct dirent *entry;
   if(pDIR=::opendir(const_cast<clchar*>(rootPath.c_str()))){
-    const clbool folderFlag=flag&V_FOLDER;
-    const clbool fileFlag=flag&V_FILE;
-    const clbool nodotFlag=flag&V_NO_DOT_FOLDER;
+    const clbool folderFlag=flag&M_FF_FOLDER;
+    const clbool fileFlag=flag&M_FF_FILE;
+    const clbool nodotFlag=flag&M_FF_NO_DOT_FOLDER;
     clint n{0};
-    FFInfo* root=new FFInfo();
-    FFInfo* current=root;
+    FFInfo* root=nullptr;
+    FFInfo* pre=nullptr;
+    FFInfo* current=nullptr;
+    struct dirent *entry;
     while(entry=::readdir(pDIR)){
       switch(entry->d_type){
       case DT_REG:
         if(fileFlag){
-          current=CreateNewFFInfo_(current,n);
+          current=new FFInfo();
+          n++;
           clstr nameE=clstr(entry->d_name);
           current->isFolder=false;
           current->nameE=nameE;
@@ -56,6 +35,11 @@ cFFInfo* FolderAndFile::Traverse(clstr rootPath,cluint flag,clint* count){
           clint index=nameE.find_last_of('.');
           current->nameN=index>0?nameE.substr(0,index):nameE;
           current->extension=index>0?nameE.substr(index+1):"";
+
+          if(root){
+            pre->next=current;
+          } else root=current;
+          pre=current;
         }
         break;
       case DT_DIR:
@@ -64,7 +48,8 @@ cFFInfo* FolderAndFile::Traverse(clstr rootPath,cluint flag,clint* count){
             if(strcmp(entry->d_name,".")==0||strcmp(entry->d_name,"..")==0)
               continue;
           }
-          current=CreateNewFFInfo_(current,n);
+          current=new FFInfo();
+          n++;
           clstr nameE=clstr(entry->d_name);
           current->isFolder=true;
           current->nameE=nameE;
@@ -72,6 +57,11 @@ cFFInfo* FolderAndFile::Traverse(clstr rootPath,cluint flag,clint* count){
           current->parentPath=rootPath;
           current->nameN=nameE;
           current->extension="";
+
+          if(root){
+            pre->next=current;
+          } else root=current;
+          pre=current;
         }
         break;
       default:
@@ -80,29 +70,37 @@ cFFInfo* FolderAndFile::Traverse(clstr rootPath,cluint flag,clint* count){
     }
     ::closedir(pDIR);
     if(count)*count=n;
-    m_root=root;
-    return m_root->next;
+    return root;
   } else return nullptr;
 }
 
-clbool FolderAndFile::Remove(const FFInfo* info){
+void Release(const FFInfo* info){
+  const FFInfo* next;
+  while(info){
+    next=info->next;
+    delete info;
+    info=next;
+  }
+}
+
+clbool Remove(const FFInfo* info){
   if(info->isFolder){
     return ::RemoveDirectory(info->URL.c_str());
   } else return ::remove(info->URL.c_str())==0?true:false;
 }
 
-clbool FolderAndFile::CopyFileTo(const FFInfo* info,clstr desFolderPath){
+clbool CopyFileTo(const FFInfo* info,clstr desFolderPath){
   if(info->isFolder)return false;
   if(IsFolderExist(desFolderPath)){
     return CopyFile(info->URL.c_str(),(desFolderPath+info->nameE).c_str(),true);
   } else return false;
 }
 
-clbool FolderAndFile::CopyFileTo(clstr fromURL,clstr toURL){
+clbool CopyFileTo(clstr fromURL,clstr toURL){
   return CopyFile(fromURL.c_str(),toURL.c_str(),false);
 }
 
-clbool FolderAndFile::CreateFolder(clstr folderPath){
+clbool CreateFolder(clstr folderPath){
   vector<clstr> vec;
   clTypeUtil::SplitString(folderPath.c_str(),vec,"/");
 #if(0)
@@ -122,24 +120,22 @@ clbool FolderAndFile::CreateFolder(clstr folderPath){
   return true;
 }
 
-clbool FolderAndFile::IsFolderExist(clstr folderPath){
+clbool IsFolderExist(clstr folderPath){
   return !_access(folderPath.c_str(),F_OK);
 }
 
-clbool FolderAndFile::IsFileExist(clstr fileURL){
+clbool IsFileExist(clstr fileURL){
   return !_access(fileURL.c_str(),R_OK);
 }
 
-clstr FolderAndFile::FixPathOrURL(clstr str){
+clstr FixPathOrURL(clstr str){
   clstr result=clRegexp::Replace(str,"\\","/");
   if(!clRegexp::IsEndedWith(str,R"(/)")){
-    F_DBG_Warning("path \""+str+"\" is not ended with '/'");
     result+='/';
-  } 
+  }
 
   if(!clRegexp::Contain(str,"^[a~zA~Z]:")){
     if(!clRegexp::IsStartedWith(str,R"(\.)")){
-      F_DBG_Warning("path \""+str+"\" is not beginned with '.'");
       result="./"+result;
     }
   }
@@ -147,3 +143,4 @@ clstr FolderAndFile::FixPathOrURL(clstr str){
 }
 
 }
+CL_NAMESPACE_END
