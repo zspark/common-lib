@@ -21,9 +21,6 @@
   <ItemGroup>
     <ClCompile Include="src\test_clgui.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\test_clgui.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{DFDBC578-8BD6-4C86-B7BE-7A1528BBC705}</ProjectGuid>

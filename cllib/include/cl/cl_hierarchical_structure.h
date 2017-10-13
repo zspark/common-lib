@@ -1,11 +1,11 @@
 #pragma once
 
 #include <vector>
-#ifdef __CLHS_DEBUG__
+#include "cl_types.h"
+#if __CL_INTERNAL_DEBUG__
 #include <iostream>
 #include <iomanip>
 #endif
-#include "cl_types.h"
 
 CL_NAMESPACE_START
 namespace hs{
@@ -390,7 +390,7 @@ public:
   
   //print graph info;
   void Print()const{
-#ifdef __CLHS_DEBUG__
+#if __CL_INTERNAL_DEBUG__
     using namespace std;
     const cluint perDepthWidth(3);
     //std::cout<<setiosflags(ios::left)<<setw(10)<<"Root:id=0"<<std::endl;
@@ -429,7 +429,7 @@ private:
     }
   }
 
-#ifdef __CLHS_DEBUG__
+#if __CL_INTERNAL_DEBUG__
   //except root node ,all root node's children are at depth of 0;
   cluint GetDepth_(NODE<T>* node)const{
     cluint depth(0);

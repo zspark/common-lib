@@ -1,6 +1,5 @@
 #include <Windows.h>
 #include <iostream>
-#define __CLHS_DEBUG__
 #include "cl/cl_hierarchical_structure.h"
 
 using namespace std;

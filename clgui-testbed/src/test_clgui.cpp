@@ -2,7 +2,6 @@
 #define CLGUI_API_IMPORTS
 #include "clgui/clgui.h"
 #include "clgui/clgui_gui_sets.h"
-#include "test_clgui.h"
 
 using namespace std;
 using namespace clgui;
@@ -325,7 +324,7 @@ static void CreateMainGUI(){
 static void CreateTreeGUI(){
   clguiWindow* wnd=new clguiWindow();
   wnd->SetName("Tree");
-  wnd->SetPosition(clguiPositionMode::POSITION_TOP_LEFT);
+  wnd->SetPosition(clguiPositionMode::POSITION_TOP_RIGHT);
   wnd->SetSize(400,300);
   clguiAddToStage(wnd);
 

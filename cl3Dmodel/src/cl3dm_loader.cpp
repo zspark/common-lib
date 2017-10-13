@@ -19,7 +19,7 @@ cl3dmLoader::~cl3dmLoader(){
   }
 }
 
-clbool cl3dmLoader::Loader(clstr fileURL){
+clbool cl3dmLoader::Load(clstr fileURL){
   Assimp::Importer importer;
   m_scene=importer.ReadFile(fileURL,aiProcess_Triangulate|aiProcess_FlipUVs);
   if(!m_scene||m_scene->mFlags==AI_SCENE_FLAGS_INCOMPLETE||!m_scene->mRootNode){

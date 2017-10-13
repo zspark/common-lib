@@ -17,7 +17,7 @@ class CL3DM_API cl3dmLoader{
 public:
   cl3dmLoader();
   ~cl3dmLoader();
-  clbool Loader(clstr fileURL);
+  clbool Load(clstr fileURL);
   const cl3dmMesh* GetMesh(clbool begin=false);
   cluint GetNumMeshes()const{ return m_uNumMeshes; }
 

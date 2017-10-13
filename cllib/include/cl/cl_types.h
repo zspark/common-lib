@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "core\cl_lib_compile.h"
+#include "core\cl_compile.h"
 
 typedef size_t clsize;
 typedef int clint;

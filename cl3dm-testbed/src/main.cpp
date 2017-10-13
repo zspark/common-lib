@@ -10,8 +10,8 @@ int main(){
 
 
   cl3dmLoader loader;
-  loader.Loader("obuma.obj");
-  loader.Loader("obuma.obj");
+  loader.Load("obuma.obj");
+  //loader.Load("obuma.obj");
 
 
 
