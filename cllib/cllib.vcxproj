@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{2C61D32C-603C-404B-BF52-604D363023D8}</ProjectGuid>
     <RootNamespace>cllib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -89,9 +89,9 @@
       <PreprocessorDefinitions>__CL_INTERNAL_DEBUG__;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy Z:\common-lib\cllib\bin\cllib_D.dll Z:\common-lib\cllib-testbed\bin\
-copy Z:\common-lib\cllib\bin\cllib_D.dll Z:\common-lib\clgui-testbed\bin\
-copy Z:\common-lib\cllib\bin\cllib_D.dll Z:\common-lib\cl3dm-testbed\bin\</Command>
+      <Command>copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)cllib-testbed\bin\
+copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)clgui-testbed\bin\
+copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)cl3dm-testbed\bin\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -131,9 +131,9 @@ copy Z:\common-lib\cllib\bin\cllib_D.dll Z:\common-lib\cl3dm-testbed\bin\</Comma
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy Z:\common-lib\cllib\bin\cllib.dll Z:\common-lib\cllib-testbed\bin\
-copy Z:\common-lib\cllib\bin\cllib.dll Z:\common-lib\clgui-testbed\bin\
-copy Z:\common-lib\cllib\bin\cllib.dll Z:\common-lib\cl3dm-testbed\bin\</Command>
+      <Command>copy $(ProjectDir)bin\cllib.dll $(SolutionDir)cllib-testbed\bin\
+copy $(ProjectDir)bin\cllib.dll $(SolutionDir)clgui-testbed\bin\
+copy $(ProjectDir)bin\cllib.dll $(SolutionDir)cl3dm-testbed\bin\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

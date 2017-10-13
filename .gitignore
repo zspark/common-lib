@@ -10,6 +10,11 @@
 *.lib
 *.pdb
 *.log
+*.dll
+*.exp
+*.iobj
+*.ipdb
+*.ilk
 x64/
 external/
 Debug/
