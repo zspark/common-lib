@@ -1,8 +1,8 @@
 #include "clgui_object_manager.h"
 #include "clgui/core/clgui_object.h"
-#include "clgui/clgui_menu_bar.h"
-#include "clgui/clgui_menu.h"
-#include "clgui/clgui_menu_item.h"
+#include "clgui/component/clgui_menu_bar.h"
+#include "clgui/component/clgui_menu.h"
+#include "clgui/component/clgui_menu_item.h"
 
 using namespace std;
 
@@ -42,25 +42,25 @@ clguiStage * clguiObjectManager::GetStage(){
   return TryConvertTo<clguiStage*>(m_hs.GetFirstChildNode()->customObject,CLGUI_OBJECT_TYPE_STAGE);
 }
 
-clguiObject * clguiObjectManager::GetNextSibling(clguiObject * obj) const noexcept{
-  node* nd=GetNodeByclguiObject_(obj);
+clguiComponent * clguiObjectManager::GetNextSibling(clguiComponent * com) const noexcept{
+  node* nd=GetNodeByclguiObject_(com);
   if(nd){
-    if(nd->GetNextSiblingNode())return nd->GetNextSiblingNode()->customObject;
+    if(nd->GetNextSiblingNode()) return ToComponent(nd->GetNextSiblingNode()->customObject);
   } 
   return nullptr;
 }
 
-clguiObject * clguiObjectManager::GetFirstChild(clguiObject * obj) const noexcept{
+clguiComponent * clguiObjectManager::GetFirstChild(clguiContainer * obj) const noexcept{
   node* nd=GetNodeByclguiObject_(obj);
   if(nd){
-    if(nd->GetFirstChildNode())return nd->GetFirstChildNode()->customObject;
+    if(nd->GetFirstChildNode())return ToComponent(nd->GetFirstChildNode()->customObject);
   } 
   return nullptr;
 }
 
-clguiObject * clguiObjectManager::GetParent(clguiObject * child) const noexcept{
-  node* cNode=GetNodeByclguiObject_(child); F_DBG_ASSERT(cNode);
-  return (cNode->GetParentNode())?cNode->GetParentNode()->customObject:nullptr;
+clguiContainer * clguiObjectManager::GetParent(clguiComponent * child) const noexcept{
+  node* nd=GetNodeByclguiObject_(child); F_DBG_ASSERT(nd);
+  return (nd->GetParentNode())?ToContainer(nd->GetParentNode()->customObject):nullptr;
 }
 
 /*

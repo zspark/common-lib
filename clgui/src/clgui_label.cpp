@@ -1,57 +1,34 @@
-#include "clgui/clgui_label.h"
+#include "clgui/component/clgui_label.h"
+#include <varargs.h>
 #include "imgui/imgui.h"
 
 CLGUI_NAMESPACE_START
 
-clguiLabel::clguiLabel()
-  :clguiComponent(CLGUI_OBJECT_TYPE_COMPONENT){
-  m_color.w=1.f;
-  m_color.x=m_color.y=m_color.z=CLGUI_CAPTION_DEFAULT_COLOR;
+clguiLabel::clguiLabel(cluint maxCharCount)
+  :clguiComponent(CLGUI_OBJECT_TYPE_COMPONENT)
+,m_maxCharCount(maxCharCount)
+{
+  m_value=new clchar[maxCharCount];
 }
 
-clguiLabel::~clguiLabel(){}
+clguiLabel::~clguiLabel(){
+  delete[] m_value;
+  m_value=nullptr;
+}
 
 void clguiLabel::Render(){
-  ImGui::TextColored(m_color,m_caption.c_str());
-  if(m_value.empty())return;
-  ImGui::SameLine();
-  ImGui::TextColored(m_color,m_value.c_str());
+  ImGui::LabelText(m_sRenderName.c_str(),m_value);
 }
 
-void clguiLabel::SetCaption(clstr caption){
-  m_caption=caption;
-}
-
-void clguiLabel::SetColor(clfloat r,clfloat g,clfloat b,clfloat a){
-  m_color.x=r;m_color.y=g;m_color.z=b;m_color.w=a;
-}
-
-void clguiLabel::SetValue(cluint value){
-  m_value=std::to_string(value);
-}
-
-void clguiLabel::SetValue(clint value){
-  m_value=std::to_string(value);
-}
-
-void clguiLabel::SetValue(clfloat value){
-  m_value=std::to_string(value);
-}
-
-void clguiLabel::SetValue(cldouble value){
-  m_value=std::to_string(value);
-}
-
-void clguiLabel::SetValue(clchar* value){
-  m_value=clstr(value);
-}
-
-void clguiLabel::SetValue(clstr value){
-  m_value=value;
+void clguiLabel::SetValue(clstr fmt,...){
+  va_list args;
+  va_start(args,fmt);
+  vsnprintf_s(m_value,m_maxCharCount,m_maxCharCount,fmt.c_str(),args);
+  va_end(args);
 }
 
 clstr clguiLabel::GetValue() const{
-  return m_value;
+  return clstr(m_value);
 }
 
 CLGUI_NAMESPACE_END

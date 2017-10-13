@@ -1,5 +1,6 @@
 #include "clgui/core/clgui_object.h"
 #include "GLFW\glfw3.h"
+#include "imgui/imgui.h"
 #include "cl/cl_regexp_util.h"
 #include "clgui_object_manager.h"
 #include "clgui/core/clgui_event.h"
@@ -43,15 +44,21 @@ void clguiInteractive::DispatchEvent_(clguiEvent* evt){
 
 
 clguiComponent::clguiComponent(cluint type)
-  :clguiInteractive(type)
-  ,m_pos(0.f,0.f),m_size(100.f,30.f){
-  SetCaption("<NO-CAPTION>");
+  :clguiInteractive(type){
+  SetName("<NO-NAME>");
 };
 
-
 clguiContainer * clguiComponent::GetParent() {
-  clguiObject* obj=clguiObjectManager::GetIns()->GetParent(this);
-  return clguiObjectManager::ToContainer(obj);
+  return clguiObjectManager::GetIns()->GetParent(this);
+}
+
+void clguiComponent::SetName(clstr name){
+  m_sName=name;
+  m_sRenderName=name+"##"+std::to_string(m_uUniqueID); 
+}
+
+clstr clguiComponent::GetName()const{
+  return m_sName;
 }
 
 void clguiComponent::SetSize(clint width,clint height){
@@ -59,7 +66,7 @@ void clguiComponent::SetSize(clint width,clint height){
   if(height>=0)m_size.y=height;
 }
 
-void clguiComponent::GetSize(cluint* width,cluint* height)const{
+void clguiComponent::GetSize(clint* width,clint* height)const{
   *width=m_size.x;
   *height=m_size.y;
 }
@@ -69,56 +76,71 @@ void clguiComponent::ScaleSizeBy(clfloat f){
   m_size.y*=f;
 }
 
-void clguiComponent::SetPosition(clint x,clint y){
-  m_pos.x=x;
-  m_pos.y=y;
+void clguiComponent::SetSameline(clbool sameline,clfloat posx,clfloat spacing){
+  m_isSameline=sameline;
+  m_posx=posx;
+  m_spacing=spacing;
 }
 
-void clguiComponent::GetPosition(clint* x,clint* y)const{
-  *x=m_pos.x;
-  *y=m_pos.y;
-}
 
-void clguiComponent::SetCaption(clstr caption){
-  m_caption=caption+"##"+std::to_string(GetUniqueID()); 
-}
 
-clstr clguiComponent::GetCaption()const{
-  clstr c;
-  clint index=m_caption.find_first_of('#',0);
-  c=m_caption.substr(0,index);
-  return c; 
-}
+
+
 
 
 
 clguiContainer::clguiContainer(cluint type)
-  :clguiComponent(type){};
+  :clguiComponent(type)
+  ,m_pos(0.f,0.f){}
 
-clguiContainer::~clguiContainer(){
-};
+clguiContainer::~clguiContainer(){ };
 
 void clguiContainer::AddChild(clguiComponent* child){
-  clguiObjectManager::GetIns()->AddChildAt(child,this);
+  clguiObjectManager::GetIns()->AddChildAt(child,this,-1);
 }
+
 void clguiContainer::AddChildAt(clguiComponent* child,clint index){
   clguiObjectManager::GetIns()->AddChildAt(child,this,index);
 }
+
 void clguiContainer::RemoveChild(clguiComponent* child){
   clguiObjectManager::GetIns()->RemoveChild(child);
 }
 
-clguiComponent * clguiContainer::GetDirectChildByCaption(clstr caption){
+clguiComponent * clguiContainer::GetChildByName(clstr name){
   clguiObjectManager* mgr=clguiObjectManager::GetIns();
-  clguiComponent* m=clguiObjectManager::ToComponent(mgr->GetFirstChild(this));
+  clguiComponent* m=mgr->GetFirstChild(this);
   while(m){
-    if(std::strcmp(m->GetCaption().c_str(),caption.c_str())==0){
+    if(std::strcmp(m_sName.c_str(),name.c_str())==0){
       return m;
     }
-    m=clguiObjectManager::ToComponent(mgr->GetNextSibling(m));
+    m=mgr->GetNextSibling(m);
   }
   return nullptr;
 }
+
+clguiComponent * clguiContainer::GetChildByUniqueID(cluint ID){
+  clguiObjectManager* mgr=clguiObjectManager::GetIns();
+  clguiComponent* m=mgr->GetFirstChild(this);
+  while(m){
+    if(m->GetUniqueID()==ID) return m;
+    m=mgr->GetNextSibling(m);
+  }
+  return nullptr;
+}
+
+void clguiContainer::SetPosition(clint x,clint y){
+  m_pos.x=x;
+  m_pos.y=y;
+}
+
+void clguiContainer::GetPosition(clint* x,clint* y)const{
+  *x=m_pos.x;
+  *y=m_pos.y;
+}
+
+
+
 
 
 
@@ -128,8 +150,8 @@ clguiComponent * clguiContainer::GetDirectChildByCaption(clstr caption){
 clguiStage::clguiStage()
   :clguiContainer(CLGUI_OBJECT_TYPE_STAGE){}
 
-void clguiStage::NoticeWindowSize(clint width,clint height){
-  clguiComponent::SetSize(width,height);
+void clguiStage::NoticeSystemWndNewSize(clint width,clint height){
+  clguiContainer::SetSize(width,height);
 }
 
 

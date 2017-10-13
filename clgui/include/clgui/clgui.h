@@ -17,7 +17,8 @@ CLGUI_API void clguiExec();
 CLGUI_API void clguiExit();
 CLGUI_API void clguiAddToStage(clguiComponent* com);
 CLGUI_API void clguiRemoveFromStage(clguiComponent* com);
-CLGUI_API void clguiDeleteObject(clguiObject* obj,clbool withChildren=false);
+DEPRECATED CLGUI_API void clguiDeleteObject(clguiObject* obj,clbool withChildren=false);
+CLGUI_API void clguiDeleteObject(cluint objID,clbool withChildren=false);
 CLGUI_API void clguiDeleteChildren(clguiObject* obj);
 CLGUI_API clguiStage* clguiGetStage();
 

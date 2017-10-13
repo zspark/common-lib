@@ -1,4 +1,4 @@
-#include "clgui/clgui_slider.h"
+#include "clgui/component/clgui_slider.h"
 #include "imgui/imgui.h"
 #include "clgui/clgui.h"
 
@@ -34,7 +34,7 @@ void clguiSliderFloat::SetDimension(cluint d){
 }
 
 void clguiSliderFloat::Render(){
-  m_RenderFn(m_caption.c_str(),m_value[0],m_min,m_max,m_sFormat.c_str(),m_power);
+  m_RenderFn(m_sRenderName.c_str(),m_value[0],m_min,m_max,m_sFormat.c_str(),m_power);
 }
 
 void clguiSliderFloat::PostRender(){
@@ -82,7 +82,7 @@ void clguiSliderInt::SetDimension(cluint d){
 }
 
 void clguiSliderInt::Render(){
-  m_RenderFn(m_caption.c_str(),m_value[0],m_min,m_max,m_sFormat.c_str());
+  m_RenderFn(m_sRenderName.c_str(),m_value[0],m_min,m_max,m_sFormat.c_str());
 }
 
 void clguiSliderInt::PostRender(){

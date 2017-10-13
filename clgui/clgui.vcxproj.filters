@@ -45,31 +45,7 @@
     <ClInclude Include="include\clgui\clgui.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\clgui\clgui_button.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\clgui\clgui_checkbox.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\clgui\clgui_gui_sets.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\clgui\clgui_label.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\clgui\clgui_menu.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\clgui\clgui_menu_bar.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\clgui\clgui_menu_item.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\clgui\clgui_slider.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\clgui\clgui_window.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\clgui\core\clgui_variable.h">
@@ -84,7 +60,43 @@
     <ClInclude Include="include\clgui\core\clgui_event.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\clgui\clgui_textarea.h">
+    <ClInclude Include="include\clgui\component\clgui_button.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_checkbox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_label.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_menu.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_menu_bar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_menu_item.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_slider.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_text.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_window.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_combobox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_collapser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_tooltip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clgui\component\clgui_tree.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -125,7 +137,19 @@
     <ClCompile Include="src\clgui_slider.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\clgui_textarea.cpp">
+    <ClCompile Include="src\clgui_text.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clgui_combobox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clgui_collapser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clgui_tooltip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clgui_tree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

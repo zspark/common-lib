@@ -54,17 +54,18 @@ public:
   };
 
   clguiStage* GetStage();
-  clguiObject* GetNextSibling(clguiObject* obj)const noexcept;
-  clguiObject* GetFirstChild(clguiObject* obj)const noexcept;
-  clguiObject* GetParent(clguiObject* child)const noexcept;
+  clguiComponent* GetNextSibling(clguiComponent* obj)const noexcept;
+  clguiComponent* GetFirstChild(clguiContainer* obj)const noexcept;
+  clguiContainer* GetParent(clguiComponent* child)const noexcept;
   //cluint GetMenubarHeight() noexcept;
   void GetAllDecendant(clguiObject* parent,std::vector<clguiObject*>& out)noexcept;
 
   void AddChildAt(clguiComponent* child,clguiContainer* parent,clint index=-1);
   void RemoveChild(clguiComponent* child);
+
+
   void AddObject(clguiObject* obj);
   void DeleteObject(clguiObject* obj);
-
 
 private:
   clguiObjectManager();

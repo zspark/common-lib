@@ -10,6 +10,8 @@
 #define CLGUI_API __declspec(dllexport)
 #endif
 
+#define DEPRECATED
+
 #define CLGUI_NAMESPACE_START namespace clgui{
 #define CLGUI_NAMESPACE_END }
 

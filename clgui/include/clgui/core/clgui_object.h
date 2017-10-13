@@ -10,6 +10,7 @@
 
 using namespace cl;
 
+
 class clguiRenderer;
 
 CLGUI_NAMESPACE_START
@@ -25,16 +26,6 @@ CLGUI_NAMESPACE_START
 #define CLGUI_OBJECT_TYPE_STAGE (1<17|CLGUI_OBJECT_TYPE_CONTAINER)
 #define CLGUI_OBJECT_TYPE_MENUBAR ((1<<18)|CLGUI_OBJECT_TYPE_CONTAINER)
 #define CLGUI_OBJECT_TYPE_MENU ((1<<19)|CLGUI_OBJECT_TYPE_CONTAINER)
-/*
-#define CLGUI_OBJECT_TYPE_SLIDER
-#define CLGUI_OBJECT_TYPE_LABEL
-#define CLGUI_OBJECT_TYPE_CHECKBOX
-#define CLGUI_OBJECT_TYPE_WINDOW
-#define CLGUI_OBJECT_TYPE_MENUBAR
-#define CLGUI_OBJECT_TYPE_MENU
-#define CLGUI_OBJECT_TYPE_MENUITEM
-#define CLGUI_OBJECT_TYPE_NULL
-*/
 
 
 class clguiObjectManager;
@@ -51,11 +42,11 @@ public:
 
 protected:
   virtual ~clguiObject();
+  const cluint m_type;
+  const cluint m_uUniqueID;
 
 private:
   friend class clguiObjectManager;
-  const cluint m_type;
-  const cluint m_uUniqueID;
 };
 
 
@@ -104,26 +95,36 @@ class CLGUI_API clguiComponent:public clguiInteractive{
 public:
   clguiComponent(cluint type);
 
-  inline void Visible(clbool b){ m_visible=b; }
-  inline clbool Visible()const{ return m_visible; }
+  void SetVisible(clbool b){ m_visible=b; }
+  clbool GetVisible()const{ return m_visible; }
   clguiContainer* GetParent();
-
+  void SetSameline(clbool sameline,clfloat posx=0.f,clfloat spacing=1.f);
+  virtual void SetName(clstr name);
+  clstr GetName()const;
   virtual void SetSize(clint width,clint height);
-  void GetSize(cluint* width,cluint* height)const;
+  void GetSize(clint* width,clint* height)const;
+  clint GetWidth()const{ return m_size.x; };
+  clint GetHeight()const{ return m_size.y; };
   void ScaleSizeBy(clfloat f);
-  virtual void SetPosition(clint x,clint y);
-  void GetPosition(clint* x,clint* y)const;
-  virtual void SetCaption(clstr caption);
-  clstr GetCaption()const;
 
 protected:
+  friend class clguiRenderer;
+
   virtual ~clguiComponent(){};
   clbool m_visible=true;
-  clf2 m_pos;
+  clstr m_sName;
+  clstr m_sRenderName;
   clf2 m_size;
-  clstr m_caption;
+  clfloat m_posx=0.f;
+  clfloat m_spacing=1.f;
+  clfloat m_isSameline=false;
 
 };
+
+
+
+
+
 
 
 
@@ -134,11 +135,17 @@ public:
   virtual void AddChild(clguiComponent*);
   virtual void AddChildAt(clguiComponent*,clint index);
   virtual void RemoveChild(clguiComponent*);
-  virtual void NoticeWindowSize(clint width,clint height){};
-  virtual clguiComponent* GetDirectChildByCaption(clstr caption);
+  virtual void NoticeSystemWndNewSize(clint width,clint height){};
+  clguiComponent* GetChildByName(clstr name);
+  clguiComponent* GetChildByUniqueID(cluint ID);
+
 
 protected:
   virtual ~clguiContainer();
+  virtual void SetPosition(clint x,clint y);
+  void GetPosition(clint* x,clint* y)const;
+
+  clf2 m_pos;
 
   //virtual bool BuildLayoutComponentsByJson(Json::Value);
 };
@@ -151,7 +158,7 @@ public:
 
 private:
   void Render()override{};
-  void NoticeWindowSize(clint width,clint height)override;
+  void NoticeSystemWndNewSize(clint width,clint height)override;
   ~clguiStage(){};
 
 

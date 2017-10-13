@@ -1,14 +1,14 @@
-#include "clgui/clgui_menu_bar.h"
+#include "clgui/component/clgui_menu_bar.h"
 #include "core\clgui_object_manager.h"
-#include "clgui/clgui_menu.h"
-#include "clgui/clgui_menu_item.h"
+#include "clgui/component/clgui_menu.h"
+#include "clgui/component/clgui_menu_item.h"
 #include "imgui/imgui.h"
 #include "clgui/clgui.h"
 
 CLGUI_NAMESPACE_START
 
 void clguiMenuItem::Render(){
-  ImGui::MenuItem(m_caption.c_str(),m_shortKey.c_str(),m_clVarBool[0]);
+  ImGui::MenuItem(m_sRenderName.c_str(),m_shortKey.c_str(),m_clVarBool[0]);
 }
 
 clguiMenuItem::clguiMenuItem()
@@ -52,12 +52,10 @@ clguiMenu::clguiMenu()
 clguiMenu::~clguiMenu(){}
 
 clbool clguiMenu::PreRender(){
-  return ImGui::BeginMenu(m_caption.c_str());
+  return ImGui::BeginMenu(m_sRenderName.c_str());
 }
 
-void clguiMenu::Render(){ }
-
-void clguiMenu::PostRender(){
+void clguiMenu::Render(){
   ImGui::EndMenu();
 }
 
@@ -76,21 +74,15 @@ clbool clguiMenuBar::PreRender(){
   return ImGui::BeginMainMenuBar();
 }
 
-void clguiMenuBar::Render(){ }
-
-void clguiMenuBar::PostRender(){
+void clguiMenuBar::Render(){
   ImGui::EndMainMenuBar();
 }
 
-void clguiMenuBar::AddChild(clguiComponent * menu){
-  if(clguiObjectManager::ToMenu(menu)){
-    clguiContainer::AddChild(menu);
-  } else{
-    throw "menu must be a clguiMenu instance!";
-  }
+void clguiMenuBar::AddChild(clguiMenu * menu){
+  clguiContainer::AddChild(menu);
 }
 
-void clguiMenuBar::RemoveChild(clguiComponent * menu){
+void clguiMenuBar::RemoveChild(clguiMenu * menu){
   clguiContainer::RemoveChild(menu);
 }
 

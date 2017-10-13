@@ -1,17 +1,7 @@
-#include "clgui/clgui_window.h"
+#include "clgui/component/clgui_window.h"
 #include "imgui/imgui.h"
 #include "cl/cl_types.h"
 #include "core/clgui_object_manager.h"
-
-inline static void ImVec2ToclF2(ImVec2& vec2,clf2& f2){
-  vec2.x=f2.x;
-  vec2.y=f2.y;
-}
-
-inline static void clF2ToImVec2(clf2& f2,ImVec2& vec2){
-  f2.x=vec2.x;
-  f2.y=vec2.y;
-}
 
 CLGUI_NAMESPACE_START
 
@@ -21,9 +11,9 @@ clguiWindow::clguiWindow()
   ,m_condition(ImGuiSetCond_Once)
   ,m_flag(0){}
 
-void clguiWindow::NoticeWindowSize(clint width,clint height){
-  attach_side tmpSide=m_side;
-  m_side=attach_side::FREE;
+void clguiWindow::NoticeSystemWndNewSize(clint width,clint height){
+  clguiAttachSide tmpSide=m_side;
+  m_side=clguiAttachSide::FREE;
   AttachToBorder(tmpSide,m_attachSize);
 }
 
@@ -33,8 +23,41 @@ void clguiWindow::SetSize(clint width,clint height){
 }
 
 void clguiWindow::SetPosition(clint x,clint y){
-  clguiComponent::SetPosition(x,y);
+  clguiContainer::SetPosition(x,y);
   m_condition=ImGuiSetCond_Always;
+}
+
+void clguiWindow::SetPosition(clguiPositionMode mode){
+  m_posMode=mode;
+  ImGuiIO& io=ImGui::GetIO();
+  ImVec2 dsize=io.DisplaySize;
+  clint w=(clint)dsize.x;
+  clint h=(clint)dsize.y;
+  switch(mode){
+  case clgui::clguiPositionMode::POSITION_TOP_LEFT:
+    m_pos.x=0.f;
+    m_pos.y=0.f;
+    break;
+  case clgui::clguiPositionMode::POSITION_TOP_RIGHT:
+    m_pos.x=w-m_size.x;
+    m_pos.y=0.f;
+    break;
+  case clgui::clguiPositionMode::POSITION_BOTTOM_LEFT:
+    m_pos.x=0.f;
+    m_pos.y=h-m_size.y;
+    break;
+  case clgui::clguiPositionMode::POSITION_BOTTOM_RIGHT:
+    m_pos.x=w-m_size.x;
+    m_pos.y=h-m_size.y;
+    break;
+  case clgui::clguiPositionMode::POSITION_CENTER:
+    m_pos.x=(w-m_size.x)*.5f;
+    m_pos.y=(h-m_size.y)*.5f;
+    break;
+  case clgui::clguiPositionMode::POSITION_FREE:
+  default:
+    break;
+  }
 }
 
 void clguiWindow::StatusResize(clbool b){
@@ -52,9 +75,9 @@ void clguiWindow::StatusScrollbar(clbool b){
   else m_flag|=ImGuiWindowFlags_NoScrollbar;
 }
 
-void clguiWindow::AttachToBorder(attach_side side,cluint size){
+void clguiWindow::AttachToBorder(clguiAttachSide side,cluint size){
   if(side==m_side)return;
-  if(side==attach_side::FREE)return;
+  if(side==clguiAttachSide::FREE)return;
   m_side=side;
   m_attachSize=size;
   ImGuiIO& io=ImGui::GetIO();
@@ -69,23 +92,23 @@ void clguiWindow::AttachToBorder(attach_side side,cluint size){
   m_flag|=ImGuiWindowFlags_NoResize;
   m_flag|=ImGuiWindowFlags_NoTitleBar;
   switch(side){
-  case attach_side::BOTTON:
+  case clguiAttachSide::BOTTON:
     clguiComponent::SetSize(w,size);
-    clguiComponent::SetPosition(0,h-size);
+    clguiContainer::SetPosition(0,h-size);
     break;
-  case attach_side::LEFT:
+  case clguiAttachSide::LEFT:
     clguiComponent::SetSize(size,h-mbh);
-    clguiComponent::SetPosition(0,mbh);
+    clguiContainer::SetPosition(0,mbh);
     break;
-  case attach_side::RIGHT:
+  case clguiAttachSide::RIGHT:
     clguiComponent::SetSize(size,h-mbh);
-    clguiComponent::SetPosition(w-size,mbh);
+    clguiContainer::SetPosition(w-size,mbh);
     break;
-  case attach_side::TOP:
+  case clguiAttachSide::TOP:
     clguiComponent::SetSize(w,size);
-    clguiComponent::SetPosition(0,mbh);
+    clguiContainer::SetPosition(0,mbh);
     break;
-  case attach_side::FREE:
+  case clguiAttachSide::FREE:
   default:
     break;
   }
@@ -93,8 +116,8 @@ void clguiWindow::AttachToBorder(attach_side side,cluint size){
 }
 
 void clguiWindow::DetachFromBorder(){
-  if(m_side!=attach_side::FREE){
-    m_side=attach_side::FREE;
+  if(m_side!=clguiAttachSide::FREE){
+    m_side=clguiAttachSide::FREE;
     m_flag&=~ImGuiWindowFlags_NoMove;
     m_flag&=~ImGuiWindowFlags_NoResize;
     m_flag&=~ImGuiWindowFlags_NoTitleBar;
@@ -107,11 +130,11 @@ clguiWindow::~clguiWindow(){}
 clbool clguiWindow::PreRender(){
   ImGui::SetNextWindowSize(m_size,m_condition);
   ImGui::SetNextWindowPos(m_pos,m_condition);
-  ImGui::Begin(m_caption.c_str(),m_clVarBool[0],m_flag);
+  clbool r=ImGui::Begin(m_sRenderName.c_str(),m_clVarBool[0],m_flag);
 
   m_condition=ImGuiSetCond_Once;
   m_pos=ImGui::GetWindowPos();
-  return true;
+  return r;
 }
 
 void clguiWindow::Render(){

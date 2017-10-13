@@ -6,38 +6,37 @@
 
 using namespace std;
 
-class clguiRenderer{
+static class clguiRenderer{
 public:
-static void RenderConponent(clgui::clguiObjectManager& mgr,clgui::clguiObject* obj){
-  F_DBG_ASSERT(obj!=nullptr);
-  clgui::clguiComponent* com=mgr.ToComponent(obj);
-  if(!com->Visible())return;
-  F_DBG_ASSERT(com);
+static void RenderConponent(clgui::clguiObjectManager& mgr,clgui::clguiComponent* com){
+  F_DBG_ASSERT(com!=nullptr);
+  if(!com->m_visible)return;
+  if(com->m_isSameline)ImGui::SameLine(com->m_posx,com->m_spacing);
   if(com->PreRender()){
     com->Render();
-    com->PostRender();
   }
+  com->PostRender();
 };
 
-static void RenderContainer(clgui::clguiObjectManager& mgr,clgui::clguiObject* obj){
-  F_DBG_ASSERT(obj!=nullptr);
-  clgui::clguiContainer* con=mgr.ToContainer(obj); F_DBG_ASSERT(con);
-  if(!con->Visible())return;
+static void RenderContainer(clgui::clguiObjectManager& mgr,clgui::clguiComponent* com){
+  F_DBG_ASSERT(com!=nullptr);
+  clgui::clguiContainer* con=mgr.ToContainer(com); F_DBG_ASSERT(con);
+  if(!con->m_visible)return;
   if(con->PreRender()){
-    con->Render();
-    obj=mgr.GetFirstChild(con);
-    while(obj){
-      if(mgr.ToContainer(obj)){
+    com=mgr.GetFirstChild(con);
+    while(com){
+      if(mgr.ToContainer(com)){
         //container;
-        RenderContainer(mgr,obj);
+        RenderContainer(mgr,com);
       } else{
         // none container;
-        RenderConponent(mgr,obj);
+        RenderConponent(mgr,com);
       }
-      obj=mgr.GetNextSibling(obj);
+      com=mgr.GetNextSibling(com);
     }
-    con->PostRender();
+    con->Render();
   }
+  con->PostRender();
 };
 };
 
@@ -50,7 +49,7 @@ static void WindowResizeCallback(GLFWwindow* wnd,clint w,clint h){
   clgui::clguiObjectManager* mgr=clgui::clguiObjectManager::GetIns();
   clgui::clguiContainer* con=mgr->Traverse<clgui::clguiContainer>(CLGUI_OBJECT_TYPE_CONTAINER,true);
   while(con){
-    con->NoticeWindowSize(w,h);
+    con->NoticeSystemWndNewSize(w,h);
     con=mgr->Traverse<clgui::clguiContainer>(CLGUI_OBJECT_TYPE_CONTAINER,false);
   }
 }
@@ -109,6 +108,10 @@ void clguiDeleteObject(clguiObject * obj,clbool withChildren){
   }
 }
 
+CLGUI_API void clguiDeleteObject(cluint objID,clbool withChildren){
+
+}
+
 CLGUI_API void clguiDeleteChildren(clguiObject * obj){
   clguiObjectManager* mgr=clguiObjectManager::GetIns();
   mgr->GetAllDecendant(obj,s_vecTobeDeleting);
@@ -120,15 +123,18 @@ clguiStage * clguiGetStage(){
 }
 
 CLGUI_API clguiMenuBar * clguiConverToMenuBar(clguiObject * obj){
-  return clguiObjectManager::ToMenubar(obj);
+  if(obj)return clguiObjectManager::ToMenubar(obj);
+  else return nullptr;
 }
 
 CLGUI_API clguiMenu * clguiConverToMenu(clguiObject * obj){
-  return clguiObjectManager::ToMenu(obj);
+  if(obj) return clguiObjectManager::ToMenu(obj);
+  else return nullptr;
 }
 
 CLGUI_API clguiMenuItem * clguiConverToMenuItem(clguiObject * obj){
-  return clguiObjectManager::ToMenuItem(obj);
+  if(obj) return clguiObjectManager::ToMenuItem(obj);
+  else return nullptr;
 }
 
 

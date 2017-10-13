@@ -1,4 +1,4 @@
-#include "clgui/clgui_checkbox.h"
+#include "clgui/component/clgui_checkbox.h"
 #include "imgui/imgui.h"
 
 CLGUI_NAMESPACE_START
@@ -12,7 +12,7 @@ clguiCheckBox::clguiCheckBox(clbool selected)
 clguiCheckBox::~clguiCheckBox(){}
 
 void clguiCheckBox::Render(){
-  ImGui::Checkbox(m_caption.c_str(),m_cv[0]);
+  ImGui::Checkbox(m_sName.c_str(),m_cv[0]);
 }
 
 void clguiCheckBox::PostRender(){
