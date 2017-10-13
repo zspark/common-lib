@@ -15,6 +15,7 @@ class clguiMenuBar;
 class clguiMenu;
 class clguiMenuItem;
 
+typedef cl::hs::clHSNode node;
 
 class clguiObjectManager final{
   static clguiObjectManager* sIns;
@@ -29,10 +30,6 @@ public:
   static clguiMenu* ToMenu(clguiObject* obj)noexcept;
   static clguiMenuItem* ToMenuItem(clguiObject* obj)noexcept;
 
-
-private:
-  typedef cl::hs::clHSNode_T<clguiObject*> node;
-
 public:
   void Init();
   cluint GetObjectCount()const{ return m_objCount; }
@@ -44,7 +41,7 @@ public:
     else nd=m_hs.Traverse(nullptr,false);
 
     while(nd){
-      clguiObject* obj=nd->customObject;
+      clguiObject* obj=(clguiObject*)nd->custom;
       if((obj->GetType()&type)==type){
         return static_cast<T*>(obj);
       } 
@@ -72,10 +69,10 @@ private:
   ~clguiObjectManager();
   clguiObjectManager(const clguiObjectManager&)=delete;
 
-  node* GetNodeByclguiObject_(clguiObject* obj)const noexcept;
+  inline node* GetNodeByclguiObject_(clguiObject* obj)const noexcept;
 
 private:
-  cl::hs::clHS_T<clguiObject*> m_hs;
+  cl::hs::clHS m_hs;
   cluint m_objCount=0;
 
   std::map<clguiObject*,node*> m_map_clguiObject_node;

@@ -13,8 +13,6 @@
 #define CL3DM_NAMESPACE_START namespace cl3dm{
 #define CL3DM_NAMESPACE_END }
 
-#define __CL3DM_DEBUG__ 1
-#if __CL3DM_DEBUG__
-#define  __CLHS_DEBUG__
+#if __CL3DM_INTERNAL_DEBUG__
 #include <iostream>
 #endif

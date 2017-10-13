@@ -3,6 +3,8 @@
 
 CLGUI_NAMESPACE_START
 
+#define GET_CUSTOM(node) ((clguiTreeNodeInfo*)node->custom)
+
 clguiTree::clguiTree()
   :clguiComponent(CLGUI_OBJECT_TYPE_COMPONENT)
   ,m_cv(false){
@@ -11,9 +13,11 @@ clguiTree::clguiTree()
 
 nodeID clguiTree::CreateNode(clchar * name,nodeID parentNodeID){
   nd* node=m_hs.CreateNode();
-  node->customObject.name=name;
-  node->customObject.flags=ImGuiTreeNodeFlags_OpenOnArrow
+  clguiTreeNodeInfo* info=new clguiTreeNodeInfo();
+  info->name=name;
+  info->flags=ImGuiTreeNodeFlags_OpenOnArrow
     |ImGuiTreeNodeFlags_OpenOnDoubleClick;
+  node->custom=info;
   if(parentNodeID<0){
     m_hs.InsertNode(nullptr,node,hsr::R_FIRST_CHILD);
   } else{
@@ -42,20 +46,20 @@ void clguiTree::RenderSubNodes_(nd * node){
   bool isOpen;
   while(node){
     if(node->GetFirstChildNode()){
-      node->customObject.flags&=~ImGuiTreeNodeFlags_Leaf;
+      GET_CUSTOM(node)->flags&=~ImGuiTreeNodeFlags_Leaf;
     } else{
-      node->customObject.flags|=ImGuiTreeNodeFlags_Leaf;
+      GET_CUSTOM(node)->flags|=ImGuiTreeNodeFlags_Leaf;
     }
-    isOpen=ImGui::TreeNodeEx(node->customObject.name.c_str(),node->customObject.flags);
+    isOpen=ImGui::TreeNodeEx(GET_CUSTOM(node)->name.c_str(),GET_CUSTOM(node)->flags);
     if(ImGui::IsItemClicked()){
       if(m_isCtrlKeyDown)
-        node->customObject.flags^=ImGuiTreeNodeFlags_Selected;
+        GET_CUSTOM(node)->flags^=ImGuiTreeNodeFlags_Selected;
       else{
-        node->customObject.flags|=ImGuiTreeNodeFlags_Selected;
+        GET_CUSTOM(node)->flags|=ImGuiTreeNodeFlags_Selected;
       }
     } else{
       if(!m_isCtrlKeyDown)
-        node->customObject.flags&=~ImGuiTreeNodeFlags_Selected;
+        GET_CUSTOM(node)->flags&=~ImGuiTreeNodeFlags_Selected;
     }
     if(isOpen){
       RenderSubNodes_(node->GetFirstChildNode());

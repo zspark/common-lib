@@ -19,6 +19,7 @@ public:
   cluint GetNumTangents()const{ return m_uNumVertices; }
   cluint GetNumBitangents()const{ return m_uNumVertices; }
   cluint GetNumIndices()const{ return m_uNumIndices; }
+  clstr GetName()const{ return m_sName; }
 
 private:
   friend class cl3dmLoader;

@@ -3,26 +3,25 @@
 #include <vector>
 #include <map>
 #include "assimp/postprocess.h"
-#include <iostream>
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
 #include "cl3dm/cl3dm_mesh.h"
 
 using namespace std;
 
 CL3DM_NAMESPACE_START
+
 cl3dmLoader::cl3dmLoader(){}
 
 cl3dmLoader::~cl3dmLoader(){
-  hsn* node=m_hs.Traverse(nullptr,true);
-  while(node){
-    delete node->customObject;
-    node=m_hs.Traverse(nullptr,false);
-  }
+  m_hs.DeleteAllNodes(true);
 }
 
 clbool cl3dmLoader::Load(clstr fileURL){
+  m_uNumMeshes=0;
   Assimp::Importer importer;
-  m_scene=importer.ReadFile(fileURL,aiProcess_Triangulate|aiProcess_FlipUVs);
-  if(!m_scene||m_scene->mFlags==AI_SCENE_FLAGS_INCOMPLETE||!m_scene->mRootNode){
+  const aiScene* scene=importer.ReadFile(fileURL,aiProcess_Triangulate|aiProcess_FlipUVs);
+  if(!scene||scene->mFlags==AI_SCENE_FLAGS_INCOMPLETE||!scene->mRootNode){
     cout<<"ERROR::ASSIMP::"<<importer.GetErrorString()<<endl;
     return false;
   }
@@ -31,7 +30,7 @@ clbool cl3dmLoader::Load(clstr fileURL){
   map<aiNode*,hsn*> tmpMap;
 
   vector<aiNode*> tmpVec;
-  tmpVec.push_back(m_scene->mRootNode);
+  tmpVec.push_back(scene->mRootNode);
   aiNode* tmpNode=nullptr;
   aiNode* parentNode=nullptr;
   aiMesh* tmpMesh=nullptr;
@@ -43,7 +42,7 @@ clbool cl3dmLoader::Load(clstr fileURL){
     parentNode=tmpNode->mParent;
     hsn* parentNd=parentNode?tmpMap[parentNode]:nullptr;
     hsn* nd=m_hs.CreateNode();
-    nd->customObject=nullptr;
+    nd->custom=nullptr;
     m_hs.InsertNode(parentNd,nd,hsr::R_LAST_CHILD);
     tmpMap[tmpNode]=nd;
 
@@ -51,9 +50,9 @@ clbool cl3dmLoader::Load(clstr fileURL){
       tmpVec.push_back(tmpNode->mChildren[i]);
     }
     for(cluint i=0u;i<tmpNode->mNumMeshes;i++){
-      tmpMesh=m_scene->mMeshes[tmpNode->mMeshes[i]];
+      tmpMesh=scene->mMeshes[tmpNode->mMeshes[i]];
       nd=m_hs.CreateNode();
-      nd->customObject=CreateMesh_(tmpMesh,index++);
+      nd->custom=CreateMesh_(tmpMesh,index++);
       parentNode=tmpNode->mParent;
       parentNd=parentNode?tmpMap[parentNode]:nullptr;
       m_hs.InsertNode(parentNd,nd,hsr::R_LAST_CHILD);
@@ -61,13 +60,14 @@ clbool cl3dmLoader::Load(clstr fileURL){
     }
   }
 
-#if __CL3DM_DEBUG__
+#if __CL3DM_INTERNAL_DEBUG__
   clint a=10;
   m_hs.Print();
 #endif
 }
-const cl3dmMesh * cl3dmLoader::GetMesh(clbool begin){
-  return m_hs.Traverse(nullptr,begin)->customObject;
+const hsn * cl3dmLoader::GetNode(clbool begin){
+  void* c=m_hs.Traverse(nullptr,begin);
+  return (hsn*)c;
 }
 cl3dmMesh * cl3dmLoader::CreateMesh_(aiMesh * aimesh,cluint index){
   cl3dmMesh* mesh=new cl3dmMesh(index);
@@ -94,6 +94,7 @@ cl3dmMesh * cl3dmLoader::CreateMesh_(aiMesh * aimesh,cluint index){
       mesh->m_indices[index2++]=face.mIndices[j];
     }
   }
+  m_uNumMeshes++;
   return mesh;
 }
 CL3DM_NAMESPACE_END

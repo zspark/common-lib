@@ -21,7 +21,6 @@ static void OnComboboxStatusChangeHandler(clguiEvent* evt){
 static void OnCollapserStatusChange(clguiEvent* evt){
   clguiEventCollapserStatusChange* cbevt=static_cast<clguiEventCollapserStatusChange*>(evt);
   cout<<cbevt->GetSender()->GetName()<<endl;
-
 }
 
 static void cf(clguiEvent* evt){

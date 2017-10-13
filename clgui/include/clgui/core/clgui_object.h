@@ -3,7 +3,6 @@
 #include <map>
 #include <vector>
 #include "cl/cl_types.h"
-#include "cl/cl_hierarchical_structure.h"
 #include "clgui_macro.h"
 #include "clgui_variable.h"
 #include "clgui_event.h"

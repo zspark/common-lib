@@ -8,13 +8,12 @@ using namespace std;
 
 CLGUI_NAMESPACE_START
 
+#define GET_CUSTOM(node) ((clguiObject*)(node->custom))
+
 template<typename T>
 inline T TryConvertTo(clguiObject* obj,cluint type)noexcept{
   return ((obj->GetType()&type)==type)?static_cast<T>(obj):nullptr;
 }
-
-
-typedef cl::hs::clHSNode_T<clguiObject*> node;
 
 clguiObjectManager* clguiObjectManager::sIns=nullptr;
 clguiObjectManager* clguiObjectManager::GetIns(){
@@ -33,19 +32,24 @@ clguiObjectManager::~clguiObjectManager(){
   //delete all clguiobjects;
 }
 
+inline node * clguiObjectManager::GetNodeByclguiObject_(clguiObject * obj) const noexcept{
+  map<clguiObject*,node*>::const_iterator it=m_map_clguiObject_node.find(obj);
+  return it==m_map_clguiObject_node.end()?nullptr:it->second;
+}
+
 void clguiObjectManager::Init(){
   clguiStage* stage=new clguiStage();
   m_hs.InsertNode(nullptr,m_map_clguiObject_node[stage],cl::hs::clHSNodeRelation::R_FIRST_CHILD);
 }
 
 clguiStage * clguiObjectManager::GetStage(){
-  return TryConvertTo<clguiStage*>(m_hs.GetFirstChildNode()->customObject,CLGUI_OBJECT_TYPE_STAGE);
+  return TryConvertTo<clguiStage*>(GET_CUSTOM(m_hs.GetFirstChildNode()),CLGUI_OBJECT_TYPE_STAGE);
 }
 
 clguiComponent * clguiObjectManager::GetNextSibling(clguiComponent * com) const noexcept{
   node* nd=GetNodeByclguiObject_(com);
   if(nd){
-    if(nd->GetNextSiblingNode()) return ToComponent(nd->GetNextSiblingNode()->customObject);
+    if(nd->GetNextSiblingNode()) return ToComponent(GET_CUSTOM(nd->GetNextSiblingNode()));
   } 
   return nullptr;
 }
@@ -53,14 +57,14 @@ clguiComponent * clguiObjectManager::GetNextSibling(clguiComponent * com) const 
 clguiComponent * clguiObjectManager::GetFirstChild(clguiContainer * obj) const noexcept{
   node* nd=GetNodeByclguiObject_(obj);
   if(nd){
-    if(nd->GetFirstChildNode())return ToComponent(nd->GetFirstChildNode()->customObject);
+    if(nd->GetFirstChildNode())return ToComponent(GET_CUSTOM(nd->GetFirstChildNode()));
   } 
   return nullptr;
 }
 
 clguiContainer * clguiObjectManager::GetParent(clguiComponent * child) const noexcept{
   node* nd=GetNodeByclguiObject_(child); F_DBG_ASSERT(nd);
-  return (nd->GetParentNode())?ToContainer(nd->GetParentNode()->customObject):nullptr;
+  return (nd->GetParentNode())?ToContainer(GET_CUSTOM(nd->GetParentNode())):nullptr;
 }
 
 /*
@@ -76,7 +80,7 @@ cluint clguiObjectManager::GetMenubarHeight() noexcept{
 
 void clguiObjectManager::GetAllDecendant(clguiObject * parent,vector<clguiObject*>& out) noexcept{
   node* nd=GetNodeByclguiObject_(parent); F_DBG_ASSERT(nd);
-  m_hs.GetDecendantCustom(nd,out);
+  m_hs.GetDecendantCustom<clguiObject>(nd,out);
 }
 
 clguiContainer * clguiObjectManager::ToContainer(clguiObject * obj) noexcept{
@@ -133,7 +137,7 @@ void clguiObjectManager::RemoveChild(clguiComponent * child){
 void clguiObjectManager::AddObject(clguiObject * obj){
   node* nd=m_hs.CreateNode();
   m_map_clguiObject_node[obj]=nd;
-  nd->customObject=obj;
+  nd->custom=obj;
 }
 
 void clguiObjectManager::DeleteObject(clguiObject * obj){
@@ -144,12 +148,6 @@ void clguiObjectManager::DeleteObject(clguiObject * obj){
     delete obj;
   }
 }
-
-inline node * clguiObjectManager::GetNodeByclguiObject_(clguiObject * obj) const noexcept{
-  map<clguiObject*,node*>::const_iterator it=m_map_clguiObject_node.find(obj);
-  return it==m_map_clguiObject_node.end()?nullptr:it->second;
-}
-
 
 
 CLGUI_NAMESPACE_END

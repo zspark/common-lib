@@ -5,10 +5,17 @@
 using namespace std;
 using namespace cl;
 
+
+struct DATA{
+  int a;
+  float b;
+  bool c;
+};
+
 int main(){
 
-  typedef hs::clHSNode_T<float> sh_node_int;
-  typedef hs::clHS_T<float> sh_int;
+  typedef hs::clHSNode sh_node_int;
+  typedef hs::clHS sh_int;
 
   sh_int hs;
   cluint N{5};
@@ -16,6 +23,7 @@ int main(){
   sh_node_int* node2=nullptr;
   for(cluint i=0;i<N;i++){
     node=hs.CreateNode();
+    node->custom=new DATA();
     hs.InsertNode(nullptr,node,hs::clHSNodeRelation::R_FIRST_CHILD);
     if(i==2){
       for(cluint j=0;j<N;j++){
@@ -48,8 +56,8 @@ int main(){
   }
 #endif
 
-  //hs.DeleteAllNodes();
-
   system("pause");
+  hs.DeleteAllNodes();
+
   return 0;
 }

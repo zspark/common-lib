@@ -91,7 +91,10 @@
     <PostBuildEvent>
       <Command>copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)cllib-testbed\bin\
 copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)clgui-testbed\bin\
-copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)cl3dm-testbed\bin\</Command>
+copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)cl3dm-testbed\bin\
+
+copy $(ProjectDir)bin\cllib_D.dll E:\workspace\RenderMaxUI\RenderMax\bin
+copy $(ProjectDir)bin\cllib_D.lib E:\workspace\RenderMaxUI\RenderMax\bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -148,6 +151,7 @@ copy $(ProjectDir)bin\cllib.dll $(SolutionDir)cl3dm-testbed\bin\</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cl_folder_file.cpp" />
+    <ClCompile Include="src\cl_hierarchical_structure.cpp" />
     <ClCompile Include="src\cl_regexp_util.cpp" />
     <ClCompile Include="src\cl_misc.cpp" />
     <ClCompile Include="src\cl_console.cpp" />

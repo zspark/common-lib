@@ -1,12 +1,16 @@
 #pragma once
 
+#include "cl\cl_hierarchical_structure.h"
 #include "clgui/core/clgui_macro.h"
 #include "clgui/core\clgui_variable.h"
 #include "clgui/core/clgui_object.h"
-#include "cl\cl_hierarchical_structure.h"
 
 
 CLGUI_NAMESPACE_START
+
+typedef cl::hs::clHS hs;
+typedef cl::hs::clHSNode nd;
+typedef cl::hs::clHSNodeRelation hsr;
 
 /*
 enum class clguiTreeNodeType{
@@ -21,11 +25,9 @@ struct clguiTreeNodeInfo{
   //clguiTreeNodeType type;
   clstr name;
   clint flags;
+  void* custom=nullptr;
 };
 
-typedef cl::hs::clHS_T<clguiTreeNodeInfo> hs;
-typedef cl::hs::clHSNode_T<clguiTreeNodeInfo> nd;
-typedef cl::hs::clHSNodeRelation hsr;
 typedef clint nodeID;
 
 class CLGUI_API clguiTree:public clguiComponent{
