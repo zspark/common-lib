@@ -2,13 +2,11 @@
 *.opensdf
 *.db
 *.opendb
-*.sln
 *.suo
 *.sdf
 *.user
 *.filters
 *.vcxproj.filters
-*.vcxproj
 *.lib
 *.pdb
 *.log
