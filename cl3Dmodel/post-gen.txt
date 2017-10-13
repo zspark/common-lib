@@ -1,0 +1,1 @@
+copy $(ProjectDir)bin\cl3dm_D.lib E:\workspace\RenderMaxUI\RenderMax\bin

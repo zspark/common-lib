@@ -1,0 +1,4 @@
+
+
+#copy $(ProjectDir)bin\cllib_D.dll E:\workspace\RenderMaxUI\RenderMax\bin
+#copy $(ProjectDir)bin\cllib_D.lib E:\workspace\RenderMaxUI\RenderMax\bin

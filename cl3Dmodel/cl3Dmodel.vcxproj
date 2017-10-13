@@ -98,7 +98,8 @@
       <AdditionalLibraryDirectories>$(SolutionDir)external/assimp/lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectDir)bin\cl3dm_D.lib E:\workspace\RenderMaxUI\RenderMax\bin</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -72,6 +72,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)bin\</OutDir>
     <TargetName>$(ProjectName)_D</TargetName>
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)bin</OutDir>
@@ -79,6 +80,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>$(ProjectName)</TargetName>
     <OutDir>$(ProjectDir)bin\</OutDir>
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -91,10 +93,7 @@
     <PostBuildEvent>
       <Command>copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)cllib-testbed\bin\
 copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)clgui-testbed\bin\
-copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)cl3dm-testbed\bin\
-
-copy $(ProjectDir)bin\cllib_D.dll E:\workspace\RenderMaxUI\RenderMax\bin
-copy $(ProjectDir)bin\cllib_D.lib E:\workspace\RenderMaxUI\RenderMax\bin</Command>
+copy $(ProjectDir)bin\cllib_D.dll $(SolutionDir)cl3dm-testbed\bin\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
