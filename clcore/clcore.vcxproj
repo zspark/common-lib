@@ -18,20 +18,17 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\hs.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{AB49A4C5-C077-4A85-A5B0-E5AA2DAA9FB7}</ProjectGuid>
-    <RootNamespace>cllibtestbed</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <ProjectGuid>{2C61D32C-603C-404B-BF52-604D363023D8}</ProjectGuid>
+    <RootNamespace>clcore</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -42,15 +39,15 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -73,12 +70,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)bin/</OutDir>
-    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)bin\</OutDir>
     <TargetName>$(ProjectName)_D</TargetName>
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)bin</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)bin/</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <OutDir>$(ProjectDir)bin\</OutDir>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -86,19 +87,21 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)cllib\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>__CL_INTERNAL_DEBUG__;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)cllib\bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>cllib_D.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
+    <PostBuildEvent>
+      <Command>copy $(ProjectDir)bin\clcore_D.dll $(SolutionDir)clcore-testbed\bin\
+copy $(ProjectDir)bin\clcore_D.dll $(SolutionDir)clgui-testbed\bin\
+copy $(ProjectDir)bin\clcore_D.dll $(SolutionDir)cl3dm-testbed\bin\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\include</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -121,16 +124,43 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)cllib\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)cllib\bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>cllib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(ProjectDir)bin\clcore.dll $(SolutionDir)clcore-testbed\bin\
+copy $(ProjectDir)bin\clcore.dll $(SolutionDir)clgui-testbed\bin\
+copy $(ProjectDir)bin\clcore.dll $(SolutionDir)cl3dm-testbed\bin\</Command>
+    </PostBuildEvent>
+    <Manifest>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+    </Manifest>
+    <Manifest>
+      <VerboseOutput>false</VerboseOutput>
+    </Manifest>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\cl\cl_console.h" />
+    <ClInclude Include="include\cl\cl_folder_file.h" />
+    <ClInclude Include="include\cl\cl_hierarchical_structure.h" />
+    <ClInclude Include="include\cl\cl_regexp_util.h" />
+    <ClInclude Include="include\cl\cl_types.h" />
+    <ClInclude Include="include\cl\cl_misc.h" />
+    <ClInclude Include="include\cl\core\cl_compile.h" />
+    <ClInclude Include="src\dirent.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\cl_folder_file.cpp" />
+    <ClCompile Include="src\cl_hierarchical_structure.cpp" />
+    <ClCompile Include="src\cl_regexp_util.cpp" />
+    <ClCompile Include="src\cl_misc.cpp" />
+    <ClCompile Include="src\cl_console.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
